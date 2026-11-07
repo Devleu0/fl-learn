@@ -97,7 +97,7 @@ Use the **File** menu in the header to keep your work in files and continue late
 Your work is also auto-saved in the browser, but save a project file if you clear browser data or want to continue on another device.
 
 ### Layout
-- **Show/hide the guide:** use "Close" at the top of the guide or the "Guide" button in the header. Hiding it gives the work area more room.
+- **Show/hide the guide:** click "Close" at the top of the guide; a "Guide" button stays at the top left in its place to open it again. Hiding it gives the work area more room.
 - **Resize the guide:** drag the border between the guide and the work area (220-560px). Double-click it to reset.
 - **Piano Roll:** when you change channel or pattern, it scrolls to where the notes are.
 - Guide visibility, width and language are remembered in the browser.

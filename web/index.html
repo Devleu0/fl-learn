@@ -35,9 +35,14 @@ label{color:var(--dim);display:inline-flex;align-items:center;gap:6px}
   .layout{flex-direction:column}
   aside#guide{width:auto;max-height:38vh;border-right:none;border-bottom:1px solid var(--line)}
   .splitter{display:none}
+  .guide-rail{width:auto;border-right:none;border-bottom:1px solid var(--line);padding:6px 12px}
+  .guide-rail button{writing-mode:horizontal-tb;width:auto;padding:4px 10px;letter-spacing:0}
 }
 aside#guide{width:var(--guide-w,300px);flex:none;overflow:auto;background:var(--panel);border-right:1px solid var(--line);padding:12px}
 .layout.guide-closed aside#guide,.layout.guide-closed .splitter{display:none}
+.guide-rail{display:none;flex:none;width:38px;background:var(--panel);border-right:1px solid var(--line);padding:10px 5px}
+.layout.guide-closed .guide-rail{display:block}
+.guide-rail button{writing-mode:vertical-rl;width:100%;padding:10px 0;letter-spacing:2px}
 .splitter{width:6px;flex:none;cursor:col-resize;margin-left:-3px;margin-right:-3px;z-index:5;position:relative}
 .splitter:hover,.splitter.drag{background:var(--accent2);opacity:.6}
 body.resizing{cursor:col-resize;user-select:none}
@@ -182,13 +187,13 @@ canvas{display:block}
         <div class="cap" id="fileInfo"></div>
       </div>
     </div>
-    <button id="btnGuide" title="튜토리얼 가이드 열기/닫기">가이드</button>
     <select id="langSel" title="Language / 언어"><option value="ko">한국어</option><option value="en">English</option></select>
   </div>
   <input id="fileInput" type="file" accept=".json,application/json" hidden>
 </header>
 
 <div class="layout">
+  <div class="guide-rail" id="guideRail"><button id="btnGuide" title="튜토리얼 가이드 열기">가이드</button></div>
   <aside id="guide"></aside>
   <div class="splitter" id="splitter" title="드래그: 가이드 너비 조절 / 더블클릭: 기본 너비"></div>
   <main>
@@ -261,7 +266,7 @@ const LANG_KEY = 'fl-practice.lang';
 let LANG = (()=>{ try { const v = localStorage.getItem(LANG_KEY); if(v === 'ko' || v === 'en') return v; } catch(e){} return /^ko/i.test(navigator.language || '') ? 'ko' : 'en'; })();
 const EN = {
  '현재 패턴만 반복':'Loop the current pattern only', '플레이리스트 전체 재생':'Play the whole playlist', '패턴 이름':'Pattern name',
- '프로젝트 저장, 열기, 내보내기':'Save, open and export projects', '튜토리얼 가이드 열기/닫기':'Show or hide the tutorial guide',
+ '프로젝트 저장, 열기, 내보내기':'Save, open and export projects', '튜토리얼 가이드 열기':'Open the tutorial guide',
  '선택한 노트(없으면 전체)의 시작 위치를 스냅 단위로 맞춤':'Snap the start of the selected notes (or all notes) to the grid',
  '선택한 클립의 패턴을 복제해 이 클립만 새 패턴을 가리키게 함':"Copy the selected clip's pattern so only this clip points to the new copy",
  '드래그: 가이드 너비 조절 / 더블클릭: 기본 너비':'Drag: resize the guide / Double-click: default width',
@@ -1096,7 +1101,6 @@ function redo(){ if(!redoStack.length){ toast('다시 실행할 작업이 없습
 function setGuide(open){ state.guideOpen = open; save(); renderAll(); }
 function renderAll(){
   document.querySelector('.layout').classList.toggle('guide-closed', !state.guideOpen);
-  $('btnGuide').classList.toggle('on', state.guideOpen);
   renderTransport(); renderFileState();
   if($('exModal').classList.contains('open')) renderExamples();
   if(state.guideOpen) renderGuide();
@@ -1792,7 +1796,7 @@ function init(){
   $('fmMidSong').onclick = ()=>exportMidi('song');
   $('fmMidPat').onclick = ()=>exportMidi('pattern');
   $('fileInput').onchange = e=>{ readProjectFile(e.target.files[0]); e.target.value = ''; };
-  $('btnGuide').onclick = ()=>setGuide(!state.guideOpen);
+  $('btnGuide').onclick = ()=>setGuide(true);
   $('langSel').value = LANG;
   $('langSel').onchange = e=>setLang(e.target.value);
   // 가이드 너비 조절: 분할선을 끌면 바뀌고, 더블클릭하면 기본값
