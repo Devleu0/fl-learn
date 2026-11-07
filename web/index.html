@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>FL 실습</title>
+<meta name="description" content="FL Studio의 핵심 개념을 익히기 위한 비공식 학습용 웹 튜토리얼입니다. Image-Line과 관련이 없습니다.">
 <style>
 :root{
   --bg:#1b1e23; --panel:#23272e; --panel2:#2b3038; --line:#3a404a; --text:#e4e7ec; --dim:#9aa3af;
@@ -181,10 +182,12 @@ canvas{display:block}
         <div class="sep"></div>
         <div class="cap">내보내기</div>
         <button id="fmWav">곡을 WAV 오디오로</button>
-        <button id="fmMidSong">곡을 MIDI 파일로 <kbd>FL Studio용</kbd></button>
+        <button id="fmMidSong">곡을 MIDI 파일로 <kbd>DAW용</kbd></button>
         <button id="fmMidPat">현재 패턴을 MIDI 파일로</button>
         <div class="sep"></div>
         <div class="cap" id="fileInfo"></div>
+        <div class="sep"></div>
+        <div class="cap">FL 실습은 Image-Line과 관련 없는 비공식 학습 프로젝트입니다. FL Studio는 Image-Line의 상표입니다.</div>
       </div>
     </div>
     <select id="langSel" title="Language / 언어"><option value="ko">한국어</option><option value="en">English</option></select>
@@ -273,7 +276,8 @@ const EN = {
  'FL 실습':'FL Practice', '재생':'Play', '정지':'Stop', '스윙':'Swing', '패턴':'Pattern', '새 패턴':'New pattern', '복제':'Clone',
  '채널별 분할':'Split by channel', '삭제':'Delete', '되돌리기':'Undo', '다시 실행':'Redo', '파일':'File', '프로젝트 이름':'Project name',
  '새 프로젝트':'New project', '프로젝트 열기':'Open project', '프로젝트 저장':'Save project', '예제 프로젝트 불러오기':'Load example project',
- '내보내기':'Export', '곡을 WAV 오디오로':'Song as WAV audio', '곡을 MIDI 파일로':'Song as MIDI file', 'FL Studio용':'for FL Studio',
+ '내보내기':'Export', '곡을 WAV 오디오로':'Song as WAV audio', '곡을 MIDI 파일로':'Song as MIDI file', 'FL Studio용':'for FL Studio', 'DAW용':'for DAWs',
+ 'FL 실습은 Image-Line과 관련 없는 비공식 학습 프로젝트입니다. FL Studio는 Image-Line의 상표입니다.':'FL Practice is an unofficial learning project, not affiliated with Image-Line. FL Studio is a trademark of Image-Line.',
  '현재 패턴을 MIDI 파일로':'Current pattern as MIDI file', '가이드':'Guide', '채널 랙':'Channel Rack', '피아노 롤':'Piano Roll',
  '플레이리스트':'Playlist', '믹서':'Mixer', '채널':'Channel', '키':'Key', '스케일':'Scale', '마이너':'Minor', '메이저':'Major', '스냅':'Snap',
  '1마디':'1 bar', '코드 스탬프':'Chord stamp', '없음 (단음)':'None (single note)', '스케일 3화음':'Scale triad', '스케일 7화음':'Scale 7th chord',
@@ -1722,6 +1726,9 @@ function renderGuide(){
     const nx = it.querySelector('[data-a=next]'); if(nx) nx.onclick = ()=>{ state.guideStep = i + 1; openStep(i + 1); };
     g.appendChild(it);
   });
+  const note = document.createElement('div'); note.className = 'hint'; note.style.marginTop = '12px';
+  note.textContent = 'FL 실습은 Image-Line과 관련 없는 비공식 학습 프로젝트입니다. FL Studio는 Image-Line의 상표입니다.';
+  g.appendChild(note);
 }
 function openStep(i){
   const s = STEPS[i]; state.guideStep = i;

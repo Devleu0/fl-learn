@@ -92,7 +92,7 @@ Use the **File** menu in the header to keep your work in files and continue late
 | New project / load example | Asks first if you have changes not saved to a file. Undo (Ctrl+Z) brings back the previous work |
 | Save status | A badge shows "Saved to file" or "Not saved to file" |
 | WAV export | Renders the whole song to an audio file |
-| MIDI export (song / current pattern) | A standard MIDI file with one track per channel. **Drag it into FL Studio** to continue with the notes you made here. Drums go on channel 10 with GM drum numbers (kick 36, snare 38, clap 39, hat 42). Swing, mixer and automation are not included |
+| MIDI export (song / current pattern) | A standard MIDI file with one track per channel. It is a standard format that FL Studio and most other DAWs can open, so you can move your notes into a real DAW and keep working (not tested in FL Studio itself). Drums go on channel 10 with GM drum numbers (kick 36, snare 38, clap 39, hat 42). Swing, mixer and automation are not included |
 
 Your work is also auto-saved in the browser, but save a project file if you clear browser data or want to continue on another device.
 
@@ -156,10 +156,16 @@ Sample loading, external plugins and effect slots, audio recording, FL-only note
 └── FL_Studio_*.md                  # analysis documents (Korean)
 ```
 
+## Trademarks and disclaimer
+- This is an **unofficial learning project** for FL Studio. It is not affiliated with, endorsed by, or sponsored by Image-Line.
+- FL Studio, FL Cloud, FruityLoops and plugin names such as FLEX, Sytrus, Harmor and Gross Beat are trademarks of Image-Line. They are used here only to refer to what is being studied.
+- No Image-Line logos, screenshots, sounds, demo songs or manual text are included. The tutorial's interface, instrument sounds and example songs were all made for this project.
+- The analysis documents are a learner's interpretation based on public information and behavior visible to users. Nothing was obtained by decompiling or disassembling the software, and nothing here is an official statement by Image-Line. Check Image-Line's official documentation for accurate information.
+- If anything here is a problem, please open an issue in this repository and it will be fixed promptly.
+
 ## License
-[MIT License](LICENSE)
+[MIT License](LICENSE). The license covers only the code and text in this repository, not the trademarks above.
 
 ## Limitations
 - The analysis is based on public information and behavior visible to users; it may differ from Image-Line's actual implementation.
 - The instruments in the tutorial are simple synthesized sounds, not samples.
-- FL Studio is a product of Image-Line. This repository is an unofficial project for learning FL Studio and is not affiliated with Image-Line.

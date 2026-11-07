@@ -3,6 +3,7 @@
 > 위치: [web/index.html](web/index.html) · 화면 이름: FL 실습 (파일 하나, 설치 없이 브라우저로 열면 실행)
 > 목적: FL Studio의 핵심 시스템을 직접 다뤄 보며 작곡 파이프라인 전체를 한 번 경험하게 한다.
 > 관련 문서: [주요 시스템 분석](FL_Studio_주요시스템분석.md) · [작곡 파이프라인별 기능 활용 분석](FL_Studio_작곡파이프라인_활용분석.md) · [문서 색인](README.md)
+> 고지: 이 문서는 FL Studio를 배우기 위한 **비공식 학습 자료**이며 Image-Line과 관련이 없습니다. FL Studio, FL Cloud와 FLEX, Sytrus, Harmor, Gross Beat 등 제품과 플러그인 이름은 Image-Line의 상표입니다. 내용은 공개 자료와 사용자가 볼 수 있는 동작을 바탕으로 한 학습자의 해석이며, 소프트웨어를 디컴파일하거나 분해해서 얻은 정보는 없습니다.
 
 ---
 
