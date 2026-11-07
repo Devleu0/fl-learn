@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>패턴 작곡 실습실</title>
+<title>FL 실습</title>
 <style>
 :root{
   --bg:#1b1e23; --panel:#23272e; --panel2:#2b3038; --line:#3a404a; --text:#e4e7ec; --dim:#9aa3af;
@@ -19,7 +19,7 @@ button.on{background:var(--accent);color:#1b1e23;border-color:var(--accent)}
 select,input[type=number],input[type=text]{background:var(--panel2);border:1px solid var(--line);border-radius:4px;padding:3px 6px}
 label{color:var(--dim);display:inline-flex;align-items:center;gap:6px}
 .top{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding:8px 14px;background:var(--panel);border-bottom:1px solid var(--line)}
-.brand{font-weight:600;font-size:15px}
+.brand{font-weight:700;font-size:16px;letter-spacing:.3px}
 .brand small{display:block;font-weight:400;color:var(--dim);font-size:11px}
 .group{display:flex;gap:6px;align-items:center}
 .seg button{border-radius:0}
@@ -34,9 +34,18 @@ label{color:var(--dim);display:inline-flex;align-items:center;gap:6px}
 @media (max-width:900px){
   .layout{flex-direction:column}
   aside#guide{width:auto;max-height:38vh;border-right:none;border-bottom:1px solid var(--line)}
+  .splitter{display:none}
 }
-aside#guide{width:300px;flex:none;overflow:auto;background:var(--panel);border-right:1px solid var(--line);padding:12px}
-.layout.guide-closed aside#guide{display:none}
+aside#guide{width:var(--guide-w,300px);flex:none;overflow:auto;background:var(--panel);border-right:1px solid var(--line);padding:12px}
+.layout.guide-closed aside#guide,.layout.guide-closed .splitter{display:none}
+.splitter{width:6px;flex:none;cursor:col-resize;margin-left:-3px;margin-right:-3px;z-index:5;position:relative}
+.splitter:hover,.splitter.drag{background:var(--accent2);opacity:.6}
+body.resizing{cursor:col-resize;user-select:none}
+.top .group + .group{padding-left:14px;border-left:1px solid var(--line)}
+.top .spacer + .group{border-left:none;padding-left:0}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.tabs .fk{font-size:10px;color:var(--dim);margin-left:6px}
+#langSel{font-size:12px}
 .guide-head{display:flex;align-items:center;gap:8px}
 .guide-head .t{flex:1;font-weight:600}
 .guide-head button{padding:2px 8px;font-size:12px}
@@ -116,7 +125,7 @@ canvas{display:block}
 </head>
 <body>
 <header class="top">
-  <div class="brand">패턴 작곡 실습실<small>FL Studio 핵심 기능 학습 튜토리얼</small></div>
+  <div class="brand">FL 실습</div>
   <div class="group">
     <button id="btnPlay" title="Space">재생</button>
     <div class="seg group" id="modeSeg" style="gap:0">
@@ -158,18 +167,20 @@ canvas{display:block}
       </div>
     </div>
     <button id="btnGuide" title="튜토리얼 가이드 열기/닫기">가이드</button>
+    <select id="langSel" title="Language / 언어"><option value="ko">한국어</option><option value="en">English</option></select>
   </div>
   <input id="fileInput" type="file" accept=".json,application/json" hidden>
 </header>
 
 <div class="layout">
   <aside id="guide"></aside>
+  <div class="splitter" id="splitter" title="드래그: 가이드 너비 조절 / 더블클릭: 기본 너비"></div>
   <main>
     <nav class="tabs" id="tabs">
-      <button data-tab="rack">채널 랙</button>
-      <button data-tab="roll">피아노 롤</button>
-      <button data-tab="playlist">플레이리스트</button>
-      <button data-tab="mixer">믹서</button>
+      <button data-tab="rack">채널 랙<span class="fk">F6</span></button>
+      <button data-tab="roll">피아노 롤<span class="fk">F7</span></button>
+      <button data-tab="playlist">플레이리스트<span class="fk">F5</span></button>
+      <button data-tab="mixer">믹서<span class="fk">F9</span></button>
     </nav>
 
     <section class="view" id="view-rack"></section>
@@ -216,6 +227,203 @@ canvas{display:block}
 
 <script>
 'use strict';
+/* ============================================================
+   다국어 (한국어 / English)
+   화면 글자는 한국어 원문으로 만들고, 영어일 때는 사전으로 바꾼다.
+   - DOM: MutationObserver가 새로 그려진 글자와 title을 바로 번역
+   - 캔버스, 확인 창, 문서 제목: tr()로 직접 번역
+   ============================================================ */
+const LANG_KEY = 'fl-practice.lang';
+let LANG = (()=>{ try { const v = localStorage.getItem(LANG_KEY); if(v === 'ko' || v === 'en') return v; } catch(e){} return /^ko/i.test(navigator.language || '') ? 'ko' : 'en'; })();
+const EN = {
+ '현재 패턴만 반복':'Loop the current pattern only', '플레이리스트 전체 재생':'Play the whole playlist', '패턴 이름':'Pattern name',
+ '프로젝트 저장, 열기, 내보내기':'Save, open and export projects', '튜토리얼 가이드 열기/닫기':'Show or hide the tutorial guide',
+ '선택한 노트(없으면 전체)의 시작 위치를 스냅 단위로 맞춤':'Snap the start of the selected notes (or all notes) to the grid',
+ '선택한 클립의 패턴을 복제해 이 클립만 새 패턴을 가리키게 함':"Copy the selected clip's pattern so only this clip points to the new copy",
+ '드래그: 가이드 너비 조절 / 더블클릭: 기본 너비':'Drag: resize the guide / Double-click: default width',
+ 'FL 실습':'FL Practice', '재생':'Play', '정지':'Stop', '스윙':'Swing', '패턴':'Pattern', '새 패턴':'New pattern', '복제':'Clone',
+ '채널별 분할':'Split by channel', '삭제':'Delete', '되돌리기':'Undo', '다시 실행':'Redo', '파일':'File', '프로젝트 이름':'Project name',
+ '새 프로젝트':'New project', '프로젝트 열기':'Open project', '프로젝트 저장':'Save project', '예제 프로젝트 불러오기':'Load example project',
+ '내보내기':'Export', '곡을 WAV 오디오로':'Song as WAV audio', '곡을 MIDI 파일로':'Song as MIDI file', 'FL Studio용':'for FL Studio',
+ '현재 패턴을 MIDI 파일로':'Current pattern as MIDI file', '가이드':'Guide', '채널 랙':'Channel Rack', '피아노 롤':'Piano Roll',
+ '플레이리스트':'Playlist', '믹서':'Mixer', '채널':'Channel', '키':'Key', '스케일':'Scale', '마이너':'Minor', '메이저':'Major', '스냅':'Snap',
+ '1마디':'1 bar', '코드 스탬프':'Chord stamp', '없음 (단음)':'None (single note)', '스케일 3화음':'Scale triad', '스케일 7화음':'Scale 7th chord',
+ '메이저 3화음':'Major triad', '마이너 3화음':'Minor triad', '고스트 노트':'Ghost notes', '전체 선택':'Select all', '선택 삭제':'Delete selection',
+ '퀀타이즈':'Quantize',
+ '마우스: 클릭 추가 · 드래그 이동 · 노트 끝 드래그 길이 · 오른쪽 클릭/드래그 삭제 · 위 눈금자 클릭 재생 위치 이동 · Ctrl+드래그 영역 선택 · Shift+클릭 선택 추가 · 아래 영역 세기 · 건반 클릭 미리듣기 · Ctrl+휠 가로 확대':
+   'Mouse: click to add · drag to move · drag a note end for length · right-click/drag to delete · click the ruler to set the playback position · Ctrl+drag to box-select · Shift+click to add to the selection · lower area for velocity · click keys to preview · Ctrl+wheel to zoom',
+ '키보드: 방향키 이동 (Shift+위/아래 옥타브) · Ctrl+A 전체 선택 · Ctrl+C/X/V 복사/잘라내기/붙여넣기 · Ctrl+B 복제 · Delete 삭제 · Q 퀀타이즈 · Esc 선택 해제 · Ctrl+Z/Y 되돌리기/다시 실행':
+   'Keyboard: arrows move (Shift+Up/Down for octaves) · Ctrl+A select all · Ctrl+C/X/V copy/cut/paste · Ctrl+B duplicate · Delete delete · Q quantize · Esc clear selection · Ctrl+Z/Y undo/redo',
+ '선택 클립 Make Unique':'Make selected clip unique', '마스터 필터 자동화 사용':'Use master filter automation', '자동화 초기화':'Reset automation',
+ '눈금자 클릭/드래그: 재생 위치 이동 · 빈 칸 클릭: 현재 패턴 배치 · 드래그: 이동 · 클립 오른쪽 끝 드래그: 길이 (패턴보다 길면 반복) · 오른쪽 클릭: 삭제 · 클립 클릭: 그 패턴이 현재 패턴이 됨':
+   'Ruler click/drag: set the playback position · click an empty cell: place the current pattern · drag: move · drag the right edge: length (repeats when longer than the pattern) · right-click: delete · click a clip: its pattern becomes the current pattern',
+ '프로젝트 파일(.json)을 놓으면 엽니다':'Drop a project file (.json) to open it',
+ '+1마디':'+1 bar', '-1마디':'-1 bar',
+ '드럼 채널의 버튼 하나 = 노트 하나. 악기 채널(베이스, 건반, 리드)은 미리보기를 눌러 피아노 롤에서 편집합니다. 이름을 누르면 소리를 들어 봅니다.':
+   'One drum button = one note. Edit instrument channels (bass, keys, lead) in the Piano Roll by clicking their preview. Click a name to hear the sound.',
+ '내 프로젝트':'My project', 'Loop (분할 전)':'Loop (before split)', '예제 - Lofi Loop':'Example - Lofi Loop',
+ '플레이리스트에 클립을 먼저 배치하세요. 내보내기는 SONG 기준입니다.':'Place clips in the playlist first. Export renders the SONG.',
+ '렌더링 중...':'Rendering...',
+ '곡 데이터가 없습니다':'no song data', '채널 정보가 없습니다':'no channel data', '패턴 정보가 없습니다':'no pattern data', '알 수 없는 악기 종류가 있습니다':'unknown instrument type',
+ 'JSON 형식이 아니어서 열 수 없습니다.':'This is not JSON, so it cannot be opened.', 'FL 실습의 프로젝트 파일이 아닙니다.':'This is not an FL Practice project file.',
+ '다른 프로젝트를 열면 지금 작업이 바뀝니다.':'Opening another project replaces your current work.', '프로젝트 파일(.json)만 열 수 있습니다.':'Only project files (.json) can be opened.',
+ '파일을 읽지 못했습니다.':'Could not read the file.', '새 프로젝트를 만들면 지금 작업이 지워집니다.':'Creating a new project clears your current work.',
+ '새 프로젝트를 만들었습니다. 되돌리기(Ctrl+Z)로 이전 작업을 되살릴 수 있습니다.':'Created a new project. Undo (Ctrl+Z) brings back your previous work.',
+ '파일로 저장 안 됨':'Not saved to file', '파일 저장됨':'Saved to file',
+ '브라우저에는 자동 저장되지만, 다른 기기나 브라우저에서 이어서 작업하려면 "파일 > 프로젝트 저장"을 하세요.':'Your work is auto-saved in this browser. To continue on another device or browser, use "File > Save project".',
+ '아직 파일로 저장한 적이 없습니다.':'Not saved to a file yet.',
+ '플레이리스트에 클립이 없습니다. 패턴만 내보내려면 "현재 패턴을 MIDI 파일로"를 쓰세요.':'There are no clips in the playlist. To export only the pattern, use "Current pattern as MIDI file".',
+ '내보낼 노트가 없습니다.':'There are no notes to export.', '노트가 있는 채널이 2개 이상일 때 나눌 수 있습니다.':'You can split when at least two channels have notes.',
+ '플레이리스트에서 클립을 먼저 선택하세요.':'Select a clip in the playlist first.', '이 패턴을 쓰는 클립이 하나뿐이라 이미 독립된 상태입니다.':'Only one clip uses this pattern, so it is already independent.',
+ '되돌릴 작업이 없습니다.':'Nothing to undo.', '다시 실행할 작업이 없습니다.':'Nothing to redo.', '플레이리스트 미사용':'Not used in the playlist',
+ '이 패턴을 고치면 사용 중인 모든 클립이 함께 바뀝니다':'Editing this pattern changes every clip that uses it',
+ '뮤트':'Mute', '뮤트됨':'Muted', '클릭: 선택 + 미리듣기 / 더블클릭: 피아노 롤':'Click: select + preview / Double-click: Piano Roll', '연결된 믹서 트랙':'Linked mixer track',
+ '채널 볼륨':'Channel volume', '클릭: 피아노 롤에서 편집':'Click: edit in the Piano Roll', '비어 있음 - 클릭해서 피아노 롤 열기':'Empty - click to open the Piano Roll',
+ '마지막 마디에 노트가 있어 줄일 수 없습니다. 노트를 먼저 지우세요.':'The last bar has notes, so it cannot be shortened. Delete those notes first.',
+ '세기':'Vel', '복사한 노트가 없습니다. 노트를 선택하고 Ctrl+C를 누르세요.':'Nothing copied yet. Select notes and press Ctrl+C.',
+ '재생 위치':'Position', '공유':'Shared', '마스터 필터':'Master filter', '(자동화)':'(automation)',
+ '꺼짐: 위의 "마스터 필터 자동화 사용"을 켜면 마디마다 값을 그릴 수 있습니다':'Off: turn on "Use master filter automation" above to draw a value for each bar',
+ '모든 출력이 모이는 곳':'Where every output ends up', '(비어 있음)':'(empty)', '출력':'Output', '사이드체인 소스':'Sidechain source', '없음':'None',
+ '볼륨':'Volume', '팬':'Pan', '덕킹 깊이':'Duck depth',
+ '마스터에는 필터(자동화 대상)와 리미터가 고정으로 걸려 있습니다.':'The master has a fixed filter (the automation target) and a limiter.',
+ '신호 경로: 채널 -> 믹서 트랙 -> (버스) -> Master. 플레이리스트의 트랙 줄은 신호 경로에 들어가지 않습니다.':'Signal path: channel -> mixer track -> (bus) -> Master. Playlist track rows are not part of the signal path.',
+ '작곡 파이프라인':'Composition pipeline', '가이드 닫기':'Close guide', '닫기':'Close',
+ '단계를 눌러 목표와 원리를 확인하세요. 조건을 채우면 자동으로 완료됩니다.':'Click a step to see its goal and principle. A step completes automatically when you meet its conditions.',
+ '완료':'Done', '목표':'Goal', '해볼 것':'Try this', '원리':'Principle', '이 단계 화면 열기':"Open this step's screen", '다음 단계':'Next step',
+ '잘라냈':'Cut', '복사했':'Copied',
+ '복제본은 플레이리스트에 놓기 전까지 어디에서도 쓰이지 않습니다.':'The copy is not used anywhere until you place it in the playlist.',
+ '패턴이 하나뿐이라 지울 수 없습니다.':'This is the only pattern, so it cannot be deleted.', '예제를 불러오면 지금 작업이 바뀝니다.':'Loading the example replaces your current work.',
+ '예제를 불러왔습니다. SONG 모드로 재생해 보세요. 되돌리기(Ctrl+Z)로 이전 작업에 돌아갈 수 있습니다.':'Example loaded. Play it in SONG mode. Undo (Ctrl+Z) takes you back to your previous work.',
+ '예제 보기 모드입니다. 바꾼 내용은 저장되지 않습니다. 저장하려면 "파일 > 예제 프로젝트 불러오기"를 누르세요.':'Example view mode. Changes are not saved. To keep it, choose "File > Load example project".',
+ // 가이드 단계
+ '사운드 고르기':'Choose sounds', '곡에 쓸 소리들을 들어 보고 각각의 성격을 파악한다.':'Listen to the sounds for your song and get to know each one.',
+ '채널 랙에서 채널 이름을 눌러 소리를 들어 본다 (3개 이상)':'In the Channel Rack, click channel names to hear them (3 or more)',
+ '각 채널의 "믹서 n"이 어느 믹서 트랙으로 가는지 확인한다':'Check which mixer track each channel\'s "Mixer n" goes to',
+ 'FL Studio는 소리(채널)와 노트(패턴)를 분리한다. 채널은 "무엇이 소리 나는가"만 맡는다. 그래서 노트를 건드리지 않고 소리만 바꿀 수 있다. (시스템 분석 2.3절, 4장)':
+   'FL Studio separates sounds (channels) from notes (patterns). A channel only decides "what makes the sound", so you can swap a sound without touching the notes. (System analysis 2.3, ch. 4)',
+ '리듬 만들기':'Make a rhythm', '킥과 스네어(또는 클랩)로 기본 그루브를 만든다.':'Build a basic groove with kick and snare (or clap).',
+ '상단 PAT 모드에서 재생한다':'Play in PAT mode at the top', 'Kick 4개 이상, Snare나 Clap 2개 이상 찍는다':'Enter 4+ Kick steps and 2+ Snare or Clap steps',
+ 'Hat을 촘촘히 찍고 스윙을 올려 본다':'Fill in the Hat densely and raise the swing',
+ '스텝 버튼 하나는 노트 하나다. 스텝 시퀀서는 피아노 롤 노트를 다르게 보여주는 화면일 뿐이다. Kick을 더블클릭해 피아노 롤에서 열면 같은 노트가 보인다. (시스템 분석 4.4절)':
+   'One step button is one note. The step sequencer is just another view of the Piano Roll notes. Double-click Kick to open it in the Piano Roll and you will see the same notes. (System analysis 4.4)',
+ '코드 진행':'Chord progression', 'Keys 채널로 코드 2개 이상을 만든다.':'Make 2 or more chords on the Keys channel.',
+ '피아노 롤의 채널을 Keys로 고른다':'Choose Keys as the Piano Roll channel', '키와 스케일을 정하면 스케일 음이 밝게 표시된다':'Set the key and scale; scale notes are highlighted',
+ '코드 스탬프를 "스케일 3화음"으로 두고, 마디마다 근음 자리를 클릭한다':'Set Chord stamp to "Scale triad" and click a root note in each bar',
+ '노트 오른쪽 끝을 끌어 1마디 길이로 늘린다':'Drag the right end of the notes to make them 1 bar long',
+ '노트는 (패턴, 채널) 쌍에 속한다. 지금 편집하는 것은 "현재 패턴의 Keys 칸"이다. 코드 스탬프는 노트 여러 개를 한 번에 만들어 줄 뿐이라, 만든 뒤 하나씩 고칠 수 있다. (시스템 분석 5장, 6.3절)':
+   'Notes belong to a (pattern, channel) pair. You are editing "the Keys cell of the current pattern". Chord stamp just creates several notes at once, so you can edit them one by one afterwards. (System analysis ch. 5, 6.3)',
+ '베이스':'Bass', '킥과 맞물리는 베이스 라인을 만든다.':'Make a bass line that locks in with the kick.', '채널을 808 Bass로 고른다':'Choose the 808 Bass channel',
+ '고스트 노트를 켜 둔 채 코드의 근음을 따라 4개 이상 찍는다':'With ghost notes on, enter 4 or more notes following the chord roots',
+ '킥 위치와 맞춰 보거나 일부러 엇갈리게 놓아 본다':'Line them up with the kick, or offset them on purpose',
+ '흐리게 보이는 고스트 노트는 같은 패턴에 있는 다른 채널의 노트다. 패턴이 여러 채널을 묶고 있기 때문에 가능한 기능이다. (시스템 분석 5.5절)':
+   'The faded ghost notes are notes of other channels in the same pattern. This works because a pattern holds several channels together. (System analysis 5.5)',
+ '멜로디':'Melody', 'Lead 채널로 멜로디를 만든다.':'Make a melody on the Lead channel.', '채널을 Lead로 고른다':'Choose the Lead channel',
+ '스케일로 표시된 줄 위주로 노트 6개 이상을 찍는다':'Enter 6 or more notes, mostly on the highlighted scale rows', '아래 세기 영역을 드래그해 강약을 준다':'Drag in the velocity area below to add dynamics',
+ '스케일 강조는 음악 이론을 도구가 대신해 주는 장치다. 오선 악보 대신 그림으로 음악을 만들게 하려는 피아노 롤의 기획 의도다. (시스템 분석 5.5절)':
+   'Scale highlighting lets the tool handle the music theory. The Piano Roll is designed so you make music by drawing instead of reading staff notation. (System analysis 5.5)',
+ '편곡':'Arrange', '루프를 8마디 이상의 곡 구조로 펼친다.':'Expand the loop into a song structure of 8 bars or more.',
+ '상단 "채널별 분할"로 패턴을 악기별로 나눈다':'Split the pattern by instrument with "Split by channel" at the top',
+ '플레이리스트 빈 칸을 눌러 클립을 배치한다. 패턴은 상단 선택 상자에서 바꾼다':'Click empty playlist cells to place clips. Change the pattern in the selector at the top',
+ '구간마다 악기를 빼고 넣어 인트로, 후렴 등을 만든다':'Add and remove instruments per section to build an intro, chorus and so on',
+ '클립 하나를 고르고 "Make Unique"로 변주를 만든다':'Select a clip and make a variation with "Make Unique"', 'SONG 모드로 재생한다':'Play in SONG mode',
+ '클립은 패턴을 복사하지 않고 가리킨다. 패턴을 고치면 그 패턴을 쓰는 모든 클립이 함께 바뀐다(상단 "N곳에서 사용 중" 표시). 한 곳만 바꾸려면 Make Unique로 복제한다. (시스템 분석 6.5절)':
+   'A clip points to a pattern instead of copying it. Editing the pattern changes every clip that uses it (see "Used in N places" at the top). To change just one place, copy it with Make Unique. (System analysis 6.5)',
+ '자동화':'Automation', '필터가 서서히 열리는 빌드업을 만든다.':'Make a build-up where the filter slowly opens.',
+ '"마스터 필터 자동화 사용"을 켠다':'Turn on "Use master filter automation"', '아래 자동화 레인을 드래그해 필터가 닫혔다가 열리는 곡선을 그린다':'Drag in the automation lane below to draw a curve where the filter closes and then opens',
+ 'SONG 모드로 재생해 들어 본다':'Play it in SONG mode and listen',
+ 'FL Studio에서는 파라미터를 오른쪽 클릭해 오토메이션 클립을 만든다. 오토메이션도 채널과 클립으로 존재해 패턴처럼 재사용된다. 이 도구는 마스터 필터 하나로 단순화했다. (시스템 분석 9장)':
+   'In FL Studio you right-click a parameter to create an automation clip. Automation also exists as a channel and clips, so it is reused like a pattern. This tool simplifies it to a single master filter. (System analysis ch. 9)',
+ '믹싱':'Mixing', '소리의 균형을 잡고 라우팅을 경험한다.':'Balance the sounds and try routing.', '믹서 트랙 볼륨을 조절해 균형을 잡는다':'Adjust mixer track volumes to balance the mix',
+ '808 Bass가 가는 트랙(Insert 5)의 사이드체인 소스를 Insert 1(Kick)로 지정해 펌핑을 들어 본다':'Set the sidechain source of the 808 Bass track (Insert 5) to Insert 1 (Kick) and listen to the pumping',
+ '드럼 트랙들의 출력을 빈 트랙(예: Insert 8)으로 보내 버스를 만들어 본다':'Send the drum tracks to an empty track (e.g. Insert 8) to make a bus',
+ 'FL Studio 믹서는 모든 트랙이 같은 종류다. 출력 대상만 바꾸면 버스가 된다. 사이드체인은 장르의 핵심 기법이라 가장 쉬운 조작에 배치되어 있다. (시스템 분석 8장)':
+   'In the FL Studio mixer every track is the same kind. Change the output and a track becomes a bus. Sidechaining is a core technique of the genre, so it is the easiest action to reach. (System analysis ch. 8)',
+ '완성곡을 WAV 파일로 저장한다.':'Save the finished song as a WAV file.', '"파일 > 곡을 WAV 오디오로"를 누른다':'Choose "File > Song as WAV audio"',
+ '내보내기는 실시간 재생과 같은 처리 과정(채널 -> 믹서 -> 마스터)을 오프라인으로 빠르게 돌린 것이다. (시스템 분석 11.2절)':
+   'Export runs the same processing as real-time playback (channel -> mixer -> master) offline and faster. (System analysis 11.2)'
+};
+const EN_RE = [
+ [/^(.+) 저장: 트랙 (\d+)개, 노트 (\d+)개\. 스윙, 믹서, 자동화는 MIDI에 담기지 않습니다\.$/, 'Saved $1: $2 tracks, $3 notes. Swing, mixer and automation are not included in MIDI.'],
+ [/^"(.+)"을 채널별 패턴 (\d+)개로 나눴습니다\. 플레이리스트 클립 (\d+)개도 채널별로 바꿨습니다\.$/, 'Split "$1" into $2 channel patterns. $3 playlist clips were replaced per channel too.'],
+ [/^"(.+)"을 채널별 패턴 (\d+)개로 나눴습니다\.$/, 'Split "$1" into $2 channel patterns.'],
+ [/^"(.+)"을 만들었습니다\. 이제 이 클립만 따로 고칠 수 있습니다\.$/, 'Created "$1". Now you can edit this clip on its own.'],
+ [/^"(.+)" 파일로 저장했습니다\. 나중에 "프로젝트 열기"로 이어서 작업할 수 있습니다\.$/, 'Saved as "$1". Use "Open project" later to continue.'],
+ [/^"(.+)"을 열었습니다\. 패턴 (\d+)개, 클립 (\d+)개\.$/, 'Opened "$1". $2 patterns, $3 clips.'],
+ [/^파일로 저장하지 않은 변경 내용이 있습니다\. (.+) 계속할까요\?\n\(브라우저에는 자동 저장되어 있지만, 바뀐 프로젝트로 덮어써집니다\.\)$/, 'You have changes not saved to a file. $1 Continue?\n(Your work is auto-saved in the browser, but it will be replaced.)'],
+ [/^"(.+)"을 지울까요\? 플레이리스트 클립 (\d+)개도 함께 지워집니다\.$/, 'Delete "$1"? Its $2 playlist clips will be deleted too.'],
+ [/^"(.+)"을 지울까요\?$/, 'Delete "$1"?'],
+ [/^플레이리스트 1곳에서 사용 중$/, 'Used in 1 place in the playlist'],
+ [/^플레이리스트 (\d+)곳에서 사용 중$/, 'Used in $1 places in the playlist'],
+ [/^현재 패턴: (.+) \((\d+)마디\)$/, 'Current pattern: $1 ($2 bars)'],
+ [/^패턴 길이는 노트가 끝나는 지점을 마디 단위로 올림해 자동으로 정해집니다 \(최대 (\d+)마디\)\.$/, 'Pattern length is set automatically by rounding the end of the last note up to whole bars (max $1 bars).'],
+ [/^패턴 최대 길이\((\d+)마디\)를 넘어 붙여넣을 수 없습니다\.$/, 'Cannot paste past the maximum pattern length ($1 bars).'],
+ [/^노트 (\d+)개의 시작 위치를 스냅 단위로 맞췄습니다\.$/, 'Snapped the start of $1 notes to the grid.'],
+ [/^노트 (\d+)개를 (잘라냈|복사했)습니다\.$/, '$2 $1 notes.'],
+ [/^곡 길이 (\d+)마디 · 클립 (\d+)개 · 사용 패턴 (\d+)개$/, 'Song $1 bars · $2 clips · $3 patterns used'],
+ [/^선택 (\d+)개$/, '$1 selected'], [/^노트 (\d+)개$/, '$1 notes'],
+ [/^(.+)\.wav 를 저장했습니다\.$/, 'Saved $1.wav.'],
+ [/^파일을 열 수 없습니다: (.+)$/, 'Cannot open the file: $1'],
+ [/^마지막 파일 작업: (.+)$/, 'Last file action: $1'], [/^열기: (.+)$/, 'Opened: $1'],
+ [/^믹서 (\d+)$/, 'Mixer $1'], [/^공유 (\d+)$/, 'Shared $1'],
+ [/^(.+)을 만들었습니다\.$/, 'Created $1.'],
+ [/^(.+) - FL 실습$/, '$1 - FL Practice'],
+ [/^(\d+)\. (.+)$/, '$1. $2'],
+ [/^(.+) 복제$/, '$1 copy'], [/^(.+) 변주$/, '$1 variation'],
+ [/^(.+) - (.+)$/, '$1 - $2']
+];
+const HANGUL = /[가-힣]/;
+function tr(str){
+  if(LANG === 'ko' || typeof str !== 'string' || !HANGUL.test(str)) return str;
+  if(Object.prototype.hasOwnProperty.call(EN, str)) return EN[str];
+  const w = str.match(/^(\s*)([\s\S]*?)(\s*)$/);
+  if(w[1] || w[3]){ const t = tr(w[2]); return t === w[2] ? str : w[1] + t + w[3]; }
+  for(const [re, out] of EN_RE){ const m = str.match(re); if(m) return out.replace(/\$(\d)/g, (_, i)=>tr(m[+i] || '')); }
+  return str;
+}
+const ask = msg => confirm(tr(msg));
+const I18N_ATTRS = ['title', 'placeholder'];
+function trText(n){
+  // 원문을 기억해 두었다가 언어를 바꿀 때 다시 번역한다. 앱이 새 글자를 넣으면 원문을 갱신한다
+  if(n.__orig === undefined || n.nodeValue !== n.__shown) n.__orig = n.nodeValue;
+  const v = tr(n.__orig); n.__shown = v;
+  if(n.nodeValue !== v) n.nodeValue = v;
+}
+function trAttr(el, a){
+  el.__orig = el.__orig || {}; el.__shown = el.__shown || {};
+  const cur = el.getAttribute(a);
+  if(cur === null) return;
+  if(el.__orig[a] === undefined || cur !== el.__shown[a]) el.__orig[a] = cur;
+  const v = tr(el.__orig[a]); el.__shown[a] = v;
+  if(cur !== v) el.setAttribute(a, v);
+}
+function trTree(n){
+  if(n.nodeType === 3){ trText(n); return; }
+  if(n.nodeType !== 1 || n.tagName === 'SCRIPT' || n.tagName === 'STYLE') return;
+  for(const a of I18N_ATTRS) if(n.hasAttribute(a)) trAttr(n, a);
+  for(const c of n.childNodes) trTree(c);
+}
+let i18nObserver = null;
+function startI18n(){
+  document.documentElement.lang = LANG;
+  $('langSel').value = LANG;
+  trTree(document.body);
+  i18nObserver = new MutationObserver(list=>{
+    for(const m of list){
+      if(m.type === 'childList') m.addedNodes.forEach(trTree);
+      else if(m.type === 'characterData') trText(m.target);
+      else if(m.type === 'attributes') trAttr(m.target, m.attributeName);
+    }
+    i18nObserver.takeRecords();   // 번역하면서 생긴 변경은 다시 처리하지 않는다
+  });
+  i18nObserver.observe(document.body, {subtree:true, childList:true, characterData:true, attributes:true, attributeFilter:I18N_ATTRS});
+}
+function setLang(l){
+  LANG = l === 'en' ? 'en' : 'ko';
+  try { localStorage.setItem(LANG_KEY, LANG); } catch(e){}
+  document.documentElement.lang = LANG;
+  trTree(document.body); i18nObserver && i18nObserver.takeRecords();
+  renderAll();
+}
 /* ============================================================
    상수와 데이터 모델
    FL Studio의 구조를 그대로 축소했다.
@@ -576,7 +784,7 @@ function download(blob, name){
 }
 function projectData(){
   const song = {}; for(const k of SNAP_KEYS) song[k] = state[k];
-  return {format:PROJECT_FORMAT, version:1, app:'패턴 작곡 실습실', savedAt:new Date().toISOString(),
+  return {format:PROJECT_FORMAT, version:1, app:'FL 실습', savedAt:new Date().toISOString(),
           name:state.projectName, song, view:{curPattern:state.curPattern, curChannel:state.curChannel, mode:state.mode}};
 }
 function saveProject(){
@@ -628,7 +836,7 @@ function sanitizeSong(song){
 function openProjectText(text, fileName){
   let o;
   try { o = JSON.parse(text); } catch(e){ toast('JSON 형식이 아니어서 열 수 없습니다.'); return false; }
-  if(!o || o.format !== PROJECT_FORMAT){ toast('패턴 작곡 실습실의 프로젝트 파일이 아닙니다.'); return false; }
+  if(!o || o.format !== PROJECT_FORMAT){ toast('FL 실습의 프로젝트 파일이 아닙니다.'); return false; }
   const song = sanitizeSong(o.song);
   if(typeof song === 'string'){ toast('파일을 열 수 없습니다: ' + song); return false; }
   if(playing) stop();
@@ -647,7 +855,7 @@ function openProjectText(text, fileName){
 }
 function isDirty(){ return state.fileHash !== songHash(); }
 function confirmDiscard(what){
-  return !isDirty() || confirm(`파일로 저장하지 않은 변경 내용이 있습니다. ${what} 계속할까요?\n(브라우저에는 자동 저장되어 있지만, 바뀐 프로젝트로 덮어써집니다.)`);
+  return !isDirty() || ask(`파일로 저장하지 않은 변경 내용이 있습니다. ${what} 계속할까요?\n(브라우저에는 자동 저장되어 있지만, 바뀐 프로젝트로 덮어써집니다.)`);
 }
 function openProjectDialog(){ if(confirmDiscard('다른 프로젝트를 열면 지금 작업이 바뀝니다.')) $('fileInput').click(); }
 function readProjectFile(file){
@@ -672,7 +880,7 @@ function renderFileState(){
   b.title = dirty ? '브라우저에는 자동 저장되지만, 다른 기기나 브라우저에서 이어서 작업하려면 "파일 > 프로젝트 저장"을 하세요.' : '';
   $('fileInfo').textContent = state.lastFileSave ? '마지막 파일 작업: ' + state.lastFileSave : '아직 파일로 저장한 적이 없습니다.';
   if(document.activeElement !== $('projName')) $('projName').value = state.projectName;
-  document.title = state.projectName + ' - 패턴 작곡 실습실';
+  document.title = tr(state.projectName + ' - FL 실습');
 }
 
 /* ---------- MIDI 내보내기 (Standard MIDI File, Type 1) ----------
@@ -872,7 +1080,7 @@ function renderRack(){
       if(notes.length){
         const ks = notes.map(n=>n.key), lo = Math.min(...ks), hi = Math.max(...ks), span = Math.max(1, hi - lo);
         for(const n of notes){ const y = 3 + (1 - (n.key - lo)/span)*(h - 9); g.fillRect(n.pos/L*w, y, Math.max(2, n.len/L*w - 1), 3); }
-      } else { g.fillStyle = '#6b7380'; g.font = '11px sans-serif'; g.fillText('비어 있음 - 클릭해서 피아노 롤 열기', 8, 17); }
+      } else { g.fillStyle = '#6b7380'; g.font = '11px sans-serif'; g.fillText(tr('비어 있음 - 클릭해서 피아노 롤 열기'), 8, 17); }
       cv.onclick = ()=>{ state.curChannel = c.id; setTab('roll'); };
       row.appendChild(cv);
     }
@@ -915,7 +1123,14 @@ function renderRoll(){
   rootSel.value = state.scale.root; $('prScale').value = state.scale.type;
   $('prSnap').value = ui.snap; $('prChord').value = ui.chord; $('prGhost').checked = ui.ghost;
   drawRoll();
+  const view = state.curPattern + ':' + state.curChannel;
+  if(view !== prLastView){
+    prLastView = view;
+    const ns = prNotes(), top = ns.length ? Math.max(...ns.map(n=>n.key)) + 3 : 76;
+    $('prScroll').scrollTop = Math.max(0, (KEY_HI - Math.min(KEY_HI, top))*PR.RH);
+  }
 }
+let prLastView = '';
 function chordKeys(key){
   const c = ui.chord;
   if(c === 'none') return [key];
@@ -994,7 +1209,7 @@ function drawRoll(){
   // 벨로시티 영역
   const vy = GH + 6;
   g.fillStyle = '#181b20'; g.fillRect(0, GH, W, H - GH);
-  g.fillStyle = '#9aa3af'; g.font = '10px sans-serif'; g.fillText('세기', 8, vy + 14);
+  g.fillStyle = '#9aa3af'; g.font = '10px sans-serif'; g.fillText(tr('세기'), 8, vy + 14);
   for(const n of prNotes()){
     const x = PR.KW + n.pos*PR.SW + 3, h = n.vel*(PR.VH - 8);
     g.fillStyle = prSel.has(n) ? '#fff' : c.color; g.fillRect(x, vy + PR.VH - 4 - h, 4, h); g.fillRect(x - 2, vy + PR.VH - 4 - h, 8, 2);
@@ -1175,7 +1390,7 @@ function drawPlaylist(){
   g.fillStyle = '#181b20'; g.fillRect(0, 0, G.W, PL.RU);
   g.fillStyle = '#9aa3af'; g.font = '10px sans-serif';
   for(let b=0;b<SONG_BARS;b++) g.fillText(String(b+1), PL.HW + b*PL.BW + 4, 15);
-  g.fillText('재생 위치', 10, 15);
+  g.fillText(tr('재생 위치'), 10, 15);
   { const mx = PL.HW + seekPos.song/SPB*PL.BW; g.fillStyle = '#f0a040'; g.beginPath(); g.moveTo(mx - 6, 0); g.lineTo(mx + 6, 0); g.lineTo(mx, 11); g.closePath(); g.fill(); g.fillRect(mx, 0, 1, PL.RU); }
   // 트랙
   for(let t=0;t<PL_TRACKS;t++){
@@ -1200,22 +1415,22 @@ function drawPlaylist(){
       }
       if(r){ g.fillStyle = 'rgba(0,0,0,.4)'; g.fillRect(x + r*L/SPB*PL.BW, y, 1, h); g.fillStyle = 'rgba(0,0,0,.55)'; }
     }
-    g.fillStyle = '#111'; g.font = 'bold 10px sans-serif'; g.fillText(p.name.slice(0, Math.max(3, Math.floor(w/6))), x + 4, y + 10);
+    g.fillStyle = '#111'; g.font = 'bold 10px sans-serif'; g.fillText(tr(p.name).slice(0, Math.max(3, Math.floor(w/6))), x + 4, y + 10);
     const u = usage(p.id);
-    if(u > 1){ g.font = '9px sans-serif'; const lab = '공유 ' + u; g.fillText(lab, x + w - g.measureText(lab).width - 6, y + h - 3); }
+    if(u > 1){ g.font = '9px sans-serif'; const lab = tr('공유 ' + u); if(g.measureText(lab).width < w - 8) g.fillText(lab, x + w - g.measureText(lab).width - 6, y + h - 3); }
     if(c.id === state.selClip){ g.strokeStyle = '#fff'; g.lineWidth = 2; g.strokeRect(x+1, y, w-2, h); g.lineWidth = 1; }
   }
   // 자동화 레인
   const ay = G.autoTop;
   g.fillStyle = '#2b3038'; g.fillRect(0, ay, PL.HW - 2, PL.AH);
-  g.fillStyle = '#c7cdd6'; g.fillText('마스터 필터', 8, ay + 18); g.fillStyle = '#9aa3af'; g.fillText('(자동화)', 8, ay + 32);
+  g.fillStyle = '#c7cdd6'; g.fillText(tr('마스터 필터'), 8, ay + 18); g.fillStyle = '#9aa3af'; g.fillText(tr('(자동화)'), 8, ay + 32);
   g.fillStyle = '#1d2026'; g.fillRect(PL.HW, ay, G.W - PL.HW, PL.AH);
   if(state.automation.enabled){
     g.strokeStyle = '#f0a040'; g.lineWidth = 2; g.beginPath();
     state.automation.values.forEach((v,i)=>{ const x = PL.HW + i*PL.BW, y = ay + 4 + (1 - v)*(PL.AH - 8); i ? g.lineTo(x, y) : g.moveTo(x, y); });
     g.stroke(); g.lineWidth = 1; g.fillStyle = '#f0a040';
     state.automation.values.forEach((v,i)=>{ g.fillRect(PL.HW + i*PL.BW - 3, ay + 4 + (1 - v)*(PL.AH - 8) - 3, 6, 6); });
-  } else { g.fillStyle = '#6b7380'; g.fillText('꺼짐: 위의 "마스터 필터 자동화 사용"을 켜면 마디마다 값을 그릴 수 있습니다', PL.HW + 10, ay + PL.AH/2 + 4); }
+  } else { g.fillStyle = '#6b7380'; g.fillText(tr('꺼짐: 위의 "마스터 필터 자동화 사용"을 켜면 마디마다 값을 그릴 수 있습니다'), PL.HW + 10, ay + PL.AH/2 + 4); }
   $('plLine').style.height = G.H + 'px';
 }
 function plPos(e){ const r = $('plCanvas').getBoundingClientRect(); return {x:e.clientX - r.left, y:e.clientY - r.top}; }
@@ -1392,7 +1607,7 @@ const STEPS = [
    check:()=>state.progress.mixed},
   {title:'내보내기', tab:'playlist',
    goal:'완성곡을 WAV 파일로 저장한다.',
-   todo:['상단 "WAV 내보내기"를 누른다'],
+   todo:['"파일 > 곡을 WAV 오디오로"를 누른다'],
    why:'내보내기는 실시간 재생과 같은 처리 과정(채널 -> 믹서 -> 마스터)을 오프라인으로 빠르게 돌린 것이다. (시스템 분석 11.2절)',
    check:()=>state.progress.exported}
 ];
@@ -1473,7 +1688,7 @@ function init(){
   $('patDel').onclick = ()=>{
     if(state.patterns.length <= 1){ toast('패턴이 하나뿐이라 지울 수 없습니다.'); return; }
     const p = curPat(), u = usage(p.id);
-    if(!confirm(`"${p.name}"을 지울까요?` + (u ? ` 플레이리스트 클립 ${u}개도 함께 지워집니다.` : ''))) return;
+    if(!ask(`"${p.name}"을 지울까요?` + (u ? ` 플레이리스트 클립 ${u}개도 함께 지워집니다.` : ''))) return;
     state.patterns = state.patterns.filter(x=>x !== p); state.clips = state.clips.filter(c=>c.patternId !== p.id);
     state.curPattern = state.patterns[0].id; commit();
   };
@@ -1490,6 +1705,20 @@ function init(){
   $('fmMidPat').onclick = ()=>exportMidi('pattern');
   $('fileInput').onchange = e=>{ readProjectFile(e.target.files[0]); e.target.value = ''; };
   $('btnGuide').onclick = ()=>setGuide(!state.guideOpen);
+  $('langSel').value = LANG;
+  $('langSel').onchange = e=>setLang(e.target.value);
+  // 가이드 너비 조절: 분할선을 끌면 바뀌고, 더블클릭하면 기본값
+  const layout = document.querySelector('.layout'), sp = $('splitter');
+  const setGuideW = w=>{ w = Math.max(220, Math.min(560, Math.round(w))); layout.style.setProperty('--guide-w', w + 'px'); try { localStorage.setItem('fl-practice.guideW', w); } catch(e){} };
+  try { const w = +localStorage.getItem('fl-practice.guideW'); if(w) setGuideW(w); } catch(e){}
+  sp.onmousedown = e=>{
+    e.preventDefault(); sp.classList.add('drag'); document.body.classList.add('resizing');
+    const left = layout.getBoundingClientRect().left;
+    const move = ev=>setGuideW(ev.clientX - left);
+    const up = ()=>{ sp.classList.remove('drag'); document.body.classList.remove('resizing'); window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up); };
+    window.addEventListener('mousemove', move); window.addEventListener('mouseup', up);
+  };
+  sp.ondblclick = ()=>setGuideW(300);
   // 프로젝트 파일을 창에 끌어다 놓아 열기
   let dragDepth = 0;
   const hasFile = e=>e.dataTransfer && [...e.dataTransfer.types].includes('Files');
@@ -1525,6 +1754,8 @@ function init(){
     if(ctrl && lk === 'o'){ e.preventDefault(); openProjectDialog(); return; }
     if(e.key === 'Escape') $('fileMenu').classList.remove('open');
     if(e.key === 'Home'){ e.preventDefault(); seek(0, state.mode); return; }
+    const fTab = {F5:'playlist', F6:'rack', F7:'roll', F9:'mixer'}[e.key];
+    if(fTab && !ctrl){ e.preventDefault(); setTab(fTab); return; }
     if(state.tab === 'roll' && prKey(e)) e.preventDefault();
   });
   initRollEvents(); initPlaylistEvents();
@@ -1538,9 +1769,11 @@ function init(){
   if(qs.get('step')) state.guideStep = +qs.get('step');
   if(qs.get('chord')) ui.chord = qs.get('chord');
   lastSnap = snapOf();
+  if(qs.get('lang')) LANG = qs.get('lang') === 'en' ? 'en' : 'ko';
+  startI18n();
   renderAll(); requestAnimationFrame(frame);
   if(qs.has('select')){ prSel = new Set(prNotes().slice(0, +qs.get('select') || 4)); drawRoll(); }
-  if(!persist && !qs.has('shot')) toast('예제 보기 모드입니다. 바꾼 내용은 저장되지 않습니다. 저장하려면 "예제 불러오기"를 누르세요.');
+  if(!persist && !qs.has('shot')) toast('예제 보기 모드입니다. 바꾼 내용은 저장되지 않습니다. 저장하려면 "파일 > 예제 프로젝트 불러오기"를 누르세요.');
 }
 init();
 </script>
