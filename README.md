@@ -1,12 +1,10 @@
-# FL 실습
+# FL Studio 학습 프로젝트
 
 [English](README.en.md) | 한국어
 
+**FL Studio를 배우기 위한 프로젝트입니다.** FL Studio의 주요 시스템을 분석하고, 그중 작곡에 꼭 필요한 기능만 골라 단순화한 뒤 브라우저에서 직접 해 볼 수 있는 **인터랙티브 튜토리얼**로 만들었습니다.
 
-**FL Studio를 배우기 위한 프로젝트입니다.** FL Studio(2024\~2025 버전 기준)의 주요 시스템을 분석하고, 그중 작곡에 꼭 필요한 기능만 골라 단순화한 뒤 브라우저에서 직접 해 볼 수 있는 **인터랙티브 튜토리얼**로 만들었습니다.
-
-- **튜토리얼 바로 열기:** https://devleu0.github.io/fl-reverse/web/
-- **완성된 예제로 열기:** https://devleu0.github.io/fl-reverse/web/?demo (저장되지 않는 보기 모드)
+- **완성된 예제로 열기:** https://devleu0.github.io/fl-learn/web/?demo (저장되지 않는 보기 모드)
 - **화면 언어:** 한국어 / English (상단 언어 선택, 브라우저 언어에 따라 처음 언어가 정해짐)
 
 ![플레이리스트 화면](docs/images/playlist.png)

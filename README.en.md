@@ -1,11 +1,10 @@
-# FL Practice (FL 실습)
+# FL Studio Learning Project
 
 English | [한국어](README.md)
 
-**A project for learning FL Studio.** It analyzes the main systems of FL Studio (2024-2025 versions), picks the features that matter most for writing a song, simplifies them, and turns them into an **interactive tutorial** you can use in the browser.
+**A project for learning FL Studio.** It analyzes the main systems of FL Studio, picks the features that matter most for writing a song, simplifies them, and turns them into an **interactive tutorial** you can use in the browser.
 
-- **Open the tutorial:** https://devleu0.github.io/fl-reverse/web/
-- **Open a finished example:** https://devleu0.github.io/fl-reverse/web/?demo (view mode, nothing is saved)
+- **Open a finished example:** https://devleu0.github.io/fl-learn/web/?demo (view mode, nothing is saved)
 - **Languages:** English / 한국어 (switch in the header; the first language follows your browser)
 
 ![Playlist](docs/images/playlist-en.png)
