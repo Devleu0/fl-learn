@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FL 실습</title>
+<title>패턴 랩</title>
 <meta name="description" content="FL Studio의 핵심 개념을 익히기 위한 비공식 학습용 웹 튜토리얼입니다. Image-Line과 관련이 없습니다.">
 <style>
 :root{
@@ -147,7 +147,7 @@ canvas{display:block}
 </head>
 <body>
 <header class="top">
-  <div class="brand">FL 실습</div>
+  <div class="brand">패턴 랩<small>FL Studio 개념 학습용</small></div>
   <div class="group">
     <button id="btnPlay" title="Space">재생</button>
     <div class="seg group" id="modeSeg" style="gap:0">
@@ -187,7 +187,7 @@ canvas{display:block}
         <div class="sep"></div>
         <div class="cap" id="fileInfo"></div>
         <div class="sep"></div>
-        <div class="cap">FL 실습은 Image-Line과 관련 없는 비공식 학습 프로젝트입니다. FL Studio는 Image-Line의 상표입니다.</div>
+        <div class="cap">패턴 랩은 Image-Line과 관련 없는 비공식 학습 프로젝트입니다. FL Studio는 Image-Line의 상표입니다.</div>
       </div>
     </div>
     <select id="langSel" title="Language / 언어"><option value="ko">한국어</option><option value="en">English</option></select>
@@ -273,11 +273,11 @@ const EN = {
  '선택한 노트(없으면 전체)의 시작 위치를 스냅 단위로 맞춤':'Snap the start of the selected notes (or all notes) to the grid',
  '선택한 클립의 패턴을 복제해 이 클립만 새 패턴을 가리키게 함':"Copy the selected clip's pattern so only this clip points to the new copy",
  '드래그: 가이드 너비 조절 / 더블클릭: 기본 너비':'Drag: resize the guide / Double-click: default width',
- 'FL 실습':'FL Practice', '재생':'Play', '정지':'Stop', '스윙':'Swing', '패턴':'Pattern', '새 패턴':'New pattern', '복제':'Clone',
+ '패턴 랩':'Pattern Lab', 'FL Studio 개념 학습용':'for learning FL Studio concepts', '재생':'Play', '정지':'Stop', '스윙':'Swing', '패턴':'Pattern', '새 패턴':'New pattern', '복제':'Clone',
  '채널별 분할':'Split by channel', '삭제':'Delete', '되돌리기':'Undo', '다시 실행':'Redo', '파일':'File', '프로젝트 이름':'Project name',
  '새 프로젝트':'New project', '프로젝트 열기':'Open project', '프로젝트 저장':'Save project', '예제 프로젝트 불러오기':'Load example project',
  '내보내기':'Export', '곡을 WAV 오디오로':'Song as WAV audio', '곡을 MIDI 파일로':'Song as MIDI file', 'FL Studio용':'for FL Studio', 'DAW용':'for DAWs',
- 'FL 실습은 Image-Line과 관련 없는 비공식 학습 프로젝트입니다. FL Studio는 Image-Line의 상표입니다.':'FL Practice is an unofficial learning project, not affiliated with Image-Line. FL Studio is a trademark of Image-Line.',
+ '패턴 랩은 Image-Line과 관련 없는 비공식 학습 프로젝트입니다. FL Studio는 Image-Line의 상표입니다.':'Pattern Lab is an unofficial learning project, not affiliated with Image-Line. FL Studio is a trademark of Image-Line.',
  '현재 패턴을 MIDI 파일로':'Current pattern as MIDI file', '가이드':'Guide', '채널 랙':'Channel Rack', '피아노 롤':'Piano Roll',
  '플레이리스트':'Playlist', '믹서':'Mixer', '채널':'Channel', '키':'Key', '스케일':'Scale', '마이너':'Minor', '메이저':'Major', '스냅':'Snap',
  '1마디':'1 bar', '코드 스탬프':'Chord stamp', '없음 (단음)':'None (single note)', '스케일 3화음':'Scale triad', '스케일 7화음':'Scale 7th chord',
@@ -298,7 +298,7 @@ const EN = {
  '플레이리스트에 클립을 먼저 배치하세요. 내보내기는 SONG 기준입니다.':'Place clips in the playlist first. Export renders the SONG.',
  '렌더링 중...':'Rendering...',
  '곡 데이터가 없습니다':'no song data', '채널 정보가 없습니다':'no channel data', '패턴 정보가 없습니다':'no pattern data', '알 수 없는 악기 종류가 있습니다':'unknown instrument type',
- 'JSON 형식이 아니어서 열 수 없습니다.':'This is not JSON, so it cannot be opened.', 'FL 실습의 프로젝트 파일이 아닙니다.':'This is not an FL Practice project file.',
+ 'JSON 형식이 아니어서 열 수 없습니다.':'This is not JSON, so it cannot be opened.', '패턴 랩의 프로젝트 파일이 아닙니다.':'This is not an Pattern Lab project file.',
  '다른 프로젝트를 열면 지금 작업이 바뀝니다.':'Opening another project replaces your current work.', '프로젝트 파일(.json)만 열 수 있습니다.':'Only project files (.json) can be opened.',
  '파일을 읽지 못했습니다.':'Could not read the file.', '새 프로젝트를 만들면 지금 작업이 지워집니다.':'Creating a new project clears your current work.',
  '새 프로젝트를 만들었습니다. 되돌리기(Ctrl+Z)로 이전 작업을 되살릴 수 있습니다.':'Created a new project. Undo (Ctrl+Z) brings back your previous work.',
@@ -403,7 +403,7 @@ const EN_RE = [
  [/^마지막 파일 작업: (.+)$/, 'Last file action: $1'], [/^열기: (.+)$/, 'Opened: $1'],
  [/^믹서 (\d+)$/, 'Mixer $1'], [/^공유 (\d+)$/, 'Shared $1'],
  [/^(.+)을 만들었습니다\.$/, 'Created $1.'],
- [/^(.+) - FL 실습$/, '$1 - FL Practice'],
+ [/^(.+) - 패턴 랩$/, '$1 - Pattern Lab'],
  [/^(\d+)\. (.+)$/, '$1. $2'],
  [/^(.+) 복제$/, '$1 copy'], [/^(.+) 변주$/, '$1 variation'],
  [/^(.+) - (.+)$/, '$1 - $2']
@@ -821,7 +821,7 @@ function download(blob, name){
 }
 function projectData(){
   const song = {}; for(const k of SNAP_KEYS) song[k] = state[k];
-  return {format:PROJECT_FORMAT, version:1, app:'FL 실습', savedAt:new Date().toISOString(),
+  return {format:PROJECT_FORMAT, version:1, app:'패턴 랩', savedAt:new Date().toISOString(),
           name:state.projectName, song, view:{curPattern:state.curPattern, curChannel:state.curChannel, mode:state.mode}};
 }
 function saveProject(){
@@ -873,7 +873,7 @@ function sanitizeSong(song){
 function openProjectText(text, fileName){
   let o;
   try { o = JSON.parse(text); } catch(e){ toast('JSON 형식이 아니어서 열 수 없습니다.'); return false; }
-  if(!o || o.format !== PROJECT_FORMAT){ toast('FL 실습의 프로젝트 파일이 아닙니다.'); return false; }
+  if(!o || o.format !== PROJECT_FORMAT){ toast('패턴 랩의 프로젝트 파일이 아닙니다.'); return false; }
   const song = sanitizeSong(o.song);
   if(typeof song === 'string'){ toast('파일을 열 수 없습니다: ' + song); return false; }
   if(playing) stop();
@@ -975,7 +975,7 @@ function renderFileState(){
   b.title = dirty ? '브라우저에는 자동 저장되지만, 다른 기기나 브라우저에서 이어서 작업하려면 "파일 > 프로젝트 저장"을 하세요.' : '';
   $('fileInfo').textContent = state.lastFileSave ? '마지막 파일 작업: ' + state.lastFileSave : '아직 파일로 저장한 적이 없습니다.';
   if(document.activeElement !== $('projName')) $('projName').value = state.projectName;
-  document.title = tr(state.projectName + ' - FL 실습');
+  document.title = tr(state.projectName + ' - 패턴 랩');
 }
 
 /* ---------- MIDI 내보내기 (Standard MIDI File, Type 1) ----------
@@ -1727,7 +1727,7 @@ function renderGuide(){
     g.appendChild(it);
   });
   const note = document.createElement('div'); note.className = 'hint'; note.style.marginTop = '12px';
-  note.textContent = 'FL 실습은 Image-Line과 관련 없는 비공식 학습 프로젝트입니다. FL Studio는 Image-Line의 상표입니다.';
+  note.textContent = '패턴 랩은 Image-Line과 관련 없는 비공식 학습 프로젝트입니다. FL Studio는 Image-Line의 상표입니다.';
   g.appendChild(note);
 }
 function openStep(i){

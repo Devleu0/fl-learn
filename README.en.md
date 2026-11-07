@@ -22,7 +22,7 @@ This tutorial does not replace FL Studio. The goal is to learn the core concepts
 
 ---
 
-## The FL Practice tutorial
+## The Pattern Lab tutorial
 
 A mini DAW that simplifies the structure of FL Studio (Channel Rack, patterns, Piano Roll, Playlist, Mixer). It does not copy FL Studio's look; it reproduces its **data structure and behavior**. Extra features are left out so you can go from rhythm to export in one sitting.
 

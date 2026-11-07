@@ -1,4 +1,4 @@
-"""FL 실습 장르별 예제 곡 생성기.
+"""패턴 랩 장르별 예제 곡 생성기.
 
 실행: python examples/build_examples.py
 결과:
@@ -88,7 +88,7 @@ def make_project(name, bpm, swing, scale, patterns_def, arrangement, auto_points
         tracks[idx].update(over)
     songbars = max(c["start"] + c["len"] for c in clips)
     return {
-        "format": "pattern-lab-project", "version": 1, "app": "FL 실습",
+        "format": "pattern-lab-project", "version": 1, "app": "패턴 랩",
         "savedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"), "name": name,
         "song": {"bpm": bpm, "swing": swing, "channels": channels, "patterns": patterns, "nextPatternId": len(patterns) + 1,
                  "clips": clips, "nextClipId": len(clips) + 1, "tracks": tracks,
