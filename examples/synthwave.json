@@ -1,0 +1,1339 @@
+{
+ "format": "pattern-lab-project",
+ "version": 1,
+ "app": "FL 실습",
+ "savedAt": "2026-11-07T07:48:01+00:00",
+ "name": "Synthwave - Neon Highway",
+ "song": {
+  "bpm": 108,
+  "swing": 0,
+  "channels": [
+   {
+    "id": 0,
+    "name": "Kick",
+    "inst": "kick",
+    "color": "#e0703c",
+    "insert": 1,
+    "vol": 0.85,
+    "mute": false
+   },
+   {
+    "id": 1,
+    "name": "Snare",
+    "inst": "snare",
+    "color": "#e0c040",
+    "insert": 2,
+    "vol": 0.9,
+    "mute": false
+   },
+   {
+    "id": 2,
+    "name": "Clap",
+    "inst": "clap",
+    "color": "#e05a7a",
+    "insert": 3,
+    "vol": 0.6,
+    "mute": false
+   },
+   {
+    "id": 3,
+    "name": "Hat",
+    "inst": "hat",
+    "color": "#3cc8c0",
+    "insert": 4,
+    "vol": 0.55,
+    "mute": false
+   },
+   {
+    "id": 4,
+    "name": "808 Bass",
+    "inst": "bass",
+    "color": "#c95ad6",
+    "insert": 5,
+    "vol": 0.8,
+    "mute": false
+   },
+   {
+    "id": 5,
+    "name": "Keys",
+    "inst": "keys",
+    "color": "#4f9de0",
+    "insert": 6,
+    "vol": 0.8,
+    "mute": false
+   },
+   {
+    "id": 6,
+    "name": "Lead",
+    "inst": "lead",
+    "color": "#5cc275",
+    "insert": 7,
+    "vol": 0.7,
+    "mute": false
+   }
+  ],
+  "patterns": [
+   {
+    "id": 1,
+    "name": "Pad",
+    "color": "#4f9de0",
+    "minBars": 4,
+    "notes": {
+     "5": [
+      {
+       "pos": 0,
+       "len": 16,
+       "key": 57,
+       "vel": 0.5
+      },
+      {
+       "pos": 0,
+       "len": 16,
+       "key": 60,
+       "vel": 0.5
+      },
+      {
+       "pos": 0,
+       "len": 16,
+       "key": 64,
+       "vel": 0.5
+      },
+      {
+       "pos": 0,
+       "len": 16,
+       "key": 69,
+       "vel": 0.5
+      },
+      {
+       "pos": 16,
+       "len": 16,
+       "key": 53,
+       "vel": 0.5
+      },
+      {
+       "pos": 16,
+       "len": 16,
+       "key": 57,
+       "vel": 0.5
+      },
+      {
+       "pos": 16,
+       "len": 16,
+       "key": 60,
+       "vel": 0.5
+      },
+      {
+       "pos": 16,
+       "len": 16,
+       "key": 65,
+       "vel": 0.5
+      },
+      {
+       "pos": 32,
+       "len": 16,
+       "key": 55,
+       "vel": 0.5
+      },
+      {
+       "pos": 32,
+       "len": 16,
+       "key": 60,
+       "vel": 0.5
+      },
+      {
+       "pos": 32,
+       "len": 16,
+       "key": 64,
+       "vel": 0.5
+      },
+      {
+       "pos": 32,
+       "len": 16,
+       "key": 67,
+       "vel": 0.5
+      },
+      {
+       "pos": 48,
+       "len": 16,
+       "key": 55,
+       "vel": 0.5
+      },
+      {
+       "pos": 48,
+       "len": 16,
+       "key": 59,
+       "vel": 0.5
+      },
+      {
+       "pos": 48,
+       "len": 16,
+       "key": 62,
+       "vel": 0.5
+      },
+      {
+       "pos": 48,
+       "len": 16,
+       "key": 67,
+       "vel": 0.5
+      }
+     ]
+    }
+   },
+   {
+    "id": 2,
+    "name": "Arp",
+    "color": "#3cc8c0",
+    "minBars": 4,
+    "notes": {
+     "6": [
+      {
+       "pos": 0,
+       "len": 1,
+       "key": 69,
+       "vel": 0.6
+      },
+      {
+       "pos": 1,
+       "len": 1,
+       "key": 72,
+       "vel": 0.45
+      },
+      {
+       "pos": 2,
+       "len": 1,
+       "key": 76,
+       "vel": 0.45
+      },
+      {
+       "pos": 3,
+       "len": 1,
+       "key": 81,
+       "vel": 0.45
+      },
+      {
+       "pos": 4,
+       "len": 1,
+       "key": 76,
+       "vel": 0.6
+      },
+      {
+       "pos": 5,
+       "len": 1,
+       "key": 72,
+       "vel": 0.45
+      },
+      {
+       "pos": 6,
+       "len": 1,
+       "key": 69,
+       "vel": 0.45
+      },
+      {
+       "pos": 7,
+       "len": 1,
+       "key": 72,
+       "vel": 0.45
+      },
+      {
+       "pos": 8,
+       "len": 1,
+       "key": 76,
+       "vel": 0.6
+      },
+      {
+       "pos": 9,
+       "len": 1,
+       "key": 81,
+       "vel": 0.45
+      },
+      {
+       "pos": 10,
+       "len": 1,
+       "key": 76,
+       "vel": 0.45
+      },
+      {
+       "pos": 11,
+       "len": 1,
+       "key": 72,
+       "vel": 0.45
+      },
+      {
+       "pos": 12,
+       "len": 1,
+       "key": 69,
+       "vel": 0.6
+      },
+      {
+       "pos": 13,
+       "len": 1,
+       "key": 72,
+       "vel": 0.45
+      },
+      {
+       "pos": 14,
+       "len": 1,
+       "key": 76,
+       "vel": 0.45
+      },
+      {
+       "pos": 15,
+       "len": 1,
+       "key": 81,
+       "vel": 0.45
+      },
+      {
+       "pos": 16,
+       "len": 1,
+       "key": 65,
+       "vel": 0.6
+      },
+      {
+       "pos": 17,
+       "len": 1,
+       "key": 69,
+       "vel": 0.45
+      },
+      {
+       "pos": 18,
+       "len": 1,
+       "key": 72,
+       "vel": 0.45
+      },
+      {
+       "pos": 19,
+       "len": 1,
+       "key": 77,
+       "vel": 0.45
+      },
+      {
+       "pos": 20,
+       "len": 1,
+       "key": 72,
+       "vel": 0.6
+      },
+      {
+       "pos": 21,
+       "len": 1,
+       "key": 69,
+       "vel": 0.45
+      },
+      {
+       "pos": 22,
+       "len": 1,
+       "key": 65,
+       "vel": 0.45
+      },
+      {
+       "pos": 23,
+       "len": 1,
+       "key": 69,
+       "vel": 0.45
+      },
+      {
+       "pos": 24,
+       "len": 1,
+       "key": 72,
+       "vel": 0.6
+      },
+      {
+       "pos": 25,
+       "len": 1,
+       "key": 77,
+       "vel": 0.45
+      },
+      {
+       "pos": 26,
+       "len": 1,
+       "key": 72,
+       "vel": 0.45
+      },
+      {
+       "pos": 27,
+       "len": 1,
+       "key": 69,
+       "vel": 0.45
+      },
+      {
+       "pos": 28,
+       "len": 1,
+       "key": 65,
+       "vel": 0.6
+      },
+      {
+       "pos": 29,
+       "len": 1,
+       "key": 69,
+       "vel": 0.45
+      },
+      {
+       "pos": 30,
+       "len": 1,
+       "key": 72,
+       "vel": 0.45
+      },
+      {
+       "pos": 31,
+       "len": 1,
+       "key": 77,
+       "vel": 0.45
+      },
+      {
+       "pos": 32,
+       "len": 1,
+       "key": 67,
+       "vel": 0.6
+      },
+      {
+       "pos": 33,
+       "len": 1,
+       "key": 72,
+       "vel": 0.45
+      },
+      {
+       "pos": 34,
+       "len": 1,
+       "key": 76,
+       "vel": 0.45
+      },
+      {
+       "pos": 35,
+       "len": 1,
+       "key": 79,
+       "vel": 0.45
+      },
+      {
+       "pos": 36,
+       "len": 1,
+       "key": 76,
+       "vel": 0.6
+      },
+      {
+       "pos": 37,
+       "len": 1,
+       "key": 72,
+       "vel": 0.45
+      },
+      {
+       "pos": 38,
+       "len": 1,
+       "key": 67,
+       "vel": 0.45
+      },
+      {
+       "pos": 39,
+       "len": 1,
+       "key": 72,
+       "vel": 0.45
+      },
+      {
+       "pos": 40,
+       "len": 1,
+       "key": 76,
+       "vel": 0.6
+      },
+      {
+       "pos": 41,
+       "len": 1,
+       "key": 79,
+       "vel": 0.45
+      },
+      {
+       "pos": 42,
+       "len": 1,
+       "key": 76,
+       "vel": 0.45
+      },
+      {
+       "pos": 43,
+       "len": 1,
+       "key": 72,
+       "vel": 0.45
+      },
+      {
+       "pos": 44,
+       "len": 1,
+       "key": 67,
+       "vel": 0.6
+      },
+      {
+       "pos": 45,
+       "len": 1,
+       "key": 72,
+       "vel": 0.45
+      },
+      {
+       "pos": 46,
+       "len": 1,
+       "key": 76,
+       "vel": 0.45
+      },
+      {
+       "pos": 47,
+       "len": 1,
+       "key": 79,
+       "vel": 0.45
+      },
+      {
+       "pos": 48,
+       "len": 1,
+       "key": 67,
+       "vel": 0.6
+      },
+      {
+       "pos": 49,
+       "len": 1,
+       "key": 71,
+       "vel": 0.45
+      },
+      {
+       "pos": 50,
+       "len": 1,
+       "key": 74,
+       "vel": 0.45
+      },
+      {
+       "pos": 51,
+       "len": 1,
+       "key": 79,
+       "vel": 0.45
+      },
+      {
+       "pos": 52,
+       "len": 1,
+       "key": 74,
+       "vel": 0.6
+      },
+      {
+       "pos": 53,
+       "len": 1,
+       "key": 71,
+       "vel": 0.45
+      },
+      {
+       "pos": 54,
+       "len": 1,
+       "key": 67,
+       "vel": 0.45
+      },
+      {
+       "pos": 55,
+       "len": 1,
+       "key": 71,
+       "vel": 0.45
+      },
+      {
+       "pos": 56,
+       "len": 1,
+       "key": 74,
+       "vel": 0.6
+      },
+      {
+       "pos": 57,
+       "len": 1,
+       "key": 79,
+       "vel": 0.45
+      },
+      {
+       "pos": 58,
+       "len": 1,
+       "key": 74,
+       "vel": 0.45
+      },
+      {
+       "pos": 59,
+       "len": 1,
+       "key": 71,
+       "vel": 0.45
+      },
+      {
+       "pos": 60,
+       "len": 1,
+       "key": 67,
+       "vel": 0.6
+      },
+      {
+       "pos": 61,
+       "len": 1,
+       "key": 71,
+       "vel": 0.45
+      },
+      {
+       "pos": 62,
+       "len": 1,
+       "key": 74,
+       "vel": 0.45
+      },
+      {
+       "pos": 63,
+       "len": 1,
+       "key": 79,
+       "vel": 0.45
+      }
+     ]
+    }
+   },
+   {
+    "id": 3,
+    "name": "Melody",
+    "color": "#c95ad6",
+    "minBars": 4,
+    "notes": {
+     "6": [
+      {
+       "pos": 0,
+       "len": 4,
+       "key": 76,
+       "vel": 0.8
+      },
+      {
+       "pos": 4,
+       "len": 4,
+       "key": 79,
+       "vel": 0.7
+      },
+      {
+       "pos": 8,
+       "len": 6,
+       "key": 81,
+       "vel": 0.8
+      },
+      {
+       "pos": 14,
+       "len": 2,
+       "key": 79,
+       "vel": 0.7
+      },
+      {
+       "pos": 16,
+       "len": 6,
+       "key": 77,
+       "vel": 0.8
+      },
+      {
+       "pos": 22,
+       "len": 2,
+       "key": 76,
+       "vel": 0.7
+      },
+      {
+       "pos": 24,
+       "len": 8,
+       "key": 72,
+       "vel": 0.8
+      },
+      {
+       "pos": 32,
+       "len": 4,
+       "key": 76,
+       "vel": 0.7
+      },
+      {
+       "pos": 36,
+       "len": 4,
+       "key": 79,
+       "vel": 0.8
+      },
+      {
+       "pos": 40,
+       "len": 6,
+       "key": 84,
+       "vel": 0.7
+      },
+      {
+       "pos": 46,
+       "len": 2,
+       "key": 83,
+       "vel": 0.8
+      },
+      {
+       "pos": 48,
+       "len": 8,
+       "key": 79,
+       "vel": 0.7
+      },
+      {
+       "pos": 56,
+       "len": 4,
+       "key": 74,
+       "vel": 0.8
+      },
+      {
+       "pos": 60,
+       "len": 4,
+       "key": 76,
+       "vel": 0.7
+      }
+     ]
+    }
+   },
+   {
+    "id": 4,
+    "name": "Drive Bass",
+    "color": "#5cc275",
+    "minBars": 4,
+    "notes": {
+     "4": [
+      {
+       "pos": 0,
+       "len": 2,
+       "key": 45,
+       "vel": 0.85
+      },
+      {
+       "pos": 2,
+       "len": 2,
+       "key": 45,
+       "vel": 0.7
+      },
+      {
+       "pos": 4,
+       "len": 2,
+       "key": 45,
+       "vel": 0.85
+      },
+      {
+       "pos": 6,
+       "len": 2,
+       "key": 57,
+       "vel": 0.7
+      },
+      {
+       "pos": 8,
+       "len": 2,
+       "key": 45,
+       "vel": 0.85
+      },
+      {
+       "pos": 10,
+       "len": 2,
+       "key": 45,
+       "vel": 0.7
+      },
+      {
+       "pos": 12,
+       "len": 2,
+       "key": 45,
+       "vel": 0.85
+      },
+      {
+       "pos": 14,
+       "len": 2,
+       "key": 57,
+       "vel": 0.7
+      },
+      {
+       "pos": 16,
+       "len": 2,
+       "key": 41,
+       "vel": 0.85
+      },
+      {
+       "pos": 18,
+       "len": 2,
+       "key": 41,
+       "vel": 0.7
+      },
+      {
+       "pos": 20,
+       "len": 2,
+       "key": 41,
+       "vel": 0.85
+      },
+      {
+       "pos": 22,
+       "len": 2,
+       "key": 53,
+       "vel": 0.7
+      },
+      {
+       "pos": 24,
+       "len": 2,
+       "key": 41,
+       "vel": 0.85
+      },
+      {
+       "pos": 26,
+       "len": 2,
+       "key": 41,
+       "vel": 0.7
+      },
+      {
+       "pos": 28,
+       "len": 2,
+       "key": 41,
+       "vel": 0.85
+      },
+      {
+       "pos": 30,
+       "len": 2,
+       "key": 53,
+       "vel": 0.7
+      },
+      {
+       "pos": 32,
+       "len": 2,
+       "key": 48,
+       "vel": 0.85
+      },
+      {
+       "pos": 34,
+       "len": 2,
+       "key": 48,
+       "vel": 0.7
+      },
+      {
+       "pos": 36,
+       "len": 2,
+       "key": 48,
+       "vel": 0.85
+      },
+      {
+       "pos": 38,
+       "len": 2,
+       "key": 60,
+       "vel": 0.7
+      },
+      {
+       "pos": 40,
+       "len": 2,
+       "key": 48,
+       "vel": 0.85
+      },
+      {
+       "pos": 42,
+       "len": 2,
+       "key": 48,
+       "vel": 0.7
+      },
+      {
+       "pos": 44,
+       "len": 2,
+       "key": 48,
+       "vel": 0.85
+      },
+      {
+       "pos": 46,
+       "len": 2,
+       "key": 60,
+       "vel": 0.7
+      },
+      {
+       "pos": 48,
+       "len": 2,
+       "key": 43,
+       "vel": 0.85
+      },
+      {
+       "pos": 50,
+       "len": 2,
+       "key": 43,
+       "vel": 0.7
+      },
+      {
+       "pos": 52,
+       "len": 2,
+       "key": 43,
+       "vel": 0.85
+      },
+      {
+       "pos": 54,
+       "len": 2,
+       "key": 55,
+       "vel": 0.7
+      },
+      {
+       "pos": 56,
+       "len": 2,
+       "key": 43,
+       "vel": 0.85
+      },
+      {
+       "pos": 58,
+       "len": 2,
+       "key": 43,
+       "vel": 0.7
+      },
+      {
+       "pos": 60,
+       "len": 2,
+       "key": 43,
+       "vel": 0.85
+      },
+      {
+       "pos": 62,
+       "len": 2,
+       "key": 55,
+       "vel": 0.7
+      }
+     ]
+    }
+   },
+   {
+    "id": 5,
+    "name": "Drive",
+    "color": "#8a8ff0",
+    "minBars": 1,
+    "notes": {
+     "0": [
+      {
+       "pos": 0,
+       "len": 1,
+       "key": 60,
+       "vel": 0.95
+      },
+      {
+       "pos": 6,
+       "len": 1,
+       "key": 60,
+       "vel": 0.7
+      },
+      {
+       "pos": 8,
+       "len": 1,
+       "key": 60,
+       "vel": 0.95
+      }
+     ],
+     "1": [
+      {
+       "pos": 4,
+       "len": 1,
+       "key": 60,
+       "vel": 0.95
+      },
+      {
+       "pos": 12,
+       "len": 1,
+       "key": 60,
+       "vel": 0.95
+      }
+     ],
+     "2": [
+      {
+       "pos": 4,
+       "len": 1,
+       "key": 60,
+       "vel": 0.6
+      },
+      {
+       "pos": 12,
+       "len": 1,
+       "key": 60,
+       "vel": 0.6
+      }
+     ],
+     "3": [
+      {
+       "pos": 0,
+       "len": 1,
+       "key": 60,
+       "vel": 0.3
+      },
+      {
+       "pos": 2,
+       "len": 1,
+       "key": 60,
+       "vel": 0.45
+      },
+      {
+       "pos": 4,
+       "len": 1,
+       "key": 60,
+       "vel": 0.3
+      },
+      {
+       "pos": 6,
+       "len": 1,
+       "key": 60,
+       "vel": 0.45
+      },
+      {
+       "pos": 8,
+       "len": 1,
+       "key": 60,
+       "vel": 0.3
+      },
+      {
+       "pos": 10,
+       "len": 1,
+       "key": 60,
+       "vel": 0.45
+      },
+      {
+       "pos": 12,
+       "len": 1,
+       "key": 60,
+       "vel": 0.3
+      },
+      {
+       "pos": 14,
+       "len": 1,
+       "key": 60,
+       "vel": 0.45
+      }
+     ]
+    }
+   },
+   {
+    "id": 6,
+    "name": "Fill",
+    "color": "#e0703c",
+    "minBars": 1,
+    "notes": {
+     "0": [
+      {
+       "pos": 0,
+       "len": 1,
+       "key": 60,
+       "vel": 0.95
+      },
+      {
+       "pos": 8,
+       "len": 1,
+       "key": 60,
+       "vel": 0.95
+      }
+     ],
+     "1": [
+      {
+       "pos": 4,
+       "len": 1,
+       "key": 60,
+       "vel": 0.95
+      },
+      {
+       "pos": 12,
+       "len": 1,
+       "key": 60,
+       "vel": 0.95
+      },
+      {
+       "pos": 13,
+       "len": 1,
+       "key": 60,
+       "vel": 0.55
+      },
+      {
+       "pos": 14,
+       "len": 1,
+       "key": 60,
+       "vel": 0.7
+      },
+      {
+       "pos": 15,
+       "len": 1,
+       "key": 60,
+       "vel": 0.85
+      }
+     ],
+     "2": [
+      {
+       "pos": 4,
+       "len": 1,
+       "key": 60,
+       "vel": 0.6
+      },
+      {
+       "pos": 12,
+       "len": 1,
+       "key": 60,
+       "vel": 0.6
+      }
+     ],
+     "3": [
+      {
+       "pos": 0,
+       "len": 1,
+       "key": 60,
+       "vel": 0.35
+      },
+      {
+       "pos": 2,
+       "len": 1,
+       "key": 60,
+       "vel": 0.35
+      },
+      {
+       "pos": 4,
+       "len": 1,
+       "key": 60,
+       "vel": 0.35
+      },
+      {
+       "pos": 6,
+       "len": 1,
+       "key": 60,
+       "vel": 0.35
+      },
+      {
+       "pos": 8,
+       "len": 1,
+       "key": 60,
+       "vel": 0.35
+      },
+      {
+       "pos": 10,
+       "len": 1,
+       "key": 60,
+       "vel": 0.35
+      }
+     ]
+    }
+   }
+  ],
+  "nextPatternId": 7,
+  "clips": [
+   {
+    "id": 1,
+    "patternId": 1,
+    "track": 2,
+    "start": 0,
+    "len": 4
+   },
+   {
+    "id": 2,
+    "patternId": 2,
+    "track": 4,
+    "start": 0,
+    "len": 4
+   },
+   {
+    "id": 3,
+    "patternId": 5,
+    "track": 0,
+    "start": 4,
+    "len": 7
+   },
+   {
+    "id": 4,
+    "patternId": 6,
+    "track": 0,
+    "start": 11,
+    "len": 1
+   },
+   {
+    "id": 5,
+    "patternId": 4,
+    "track": 3,
+    "start": 4,
+    "len": 8
+   },
+   {
+    "id": 6,
+    "patternId": 1,
+    "track": 2,
+    "start": 4,
+    "len": 8
+   },
+   {
+    "id": 7,
+    "patternId": 2,
+    "track": 4,
+    "start": 4,
+    "len": 8
+   },
+   {
+    "id": 8,
+    "patternId": 5,
+    "track": 0,
+    "start": 12,
+    "len": 7
+   },
+   {
+    "id": 9,
+    "patternId": 6,
+    "track": 0,
+    "start": 19,
+    "len": 1
+   },
+   {
+    "id": 10,
+    "patternId": 4,
+    "track": 3,
+    "start": 12,
+    "len": 8
+   },
+   {
+    "id": 11,
+    "patternId": 1,
+    "track": 2,
+    "start": 12,
+    "len": 8
+   },
+   {
+    "id": 12,
+    "patternId": 3,
+    "track": 4,
+    "start": 12,
+    "len": 8
+   },
+   {
+    "id": 13,
+    "patternId": 1,
+    "track": 2,
+    "start": 20,
+    "len": 4
+   },
+   {
+    "id": 14,
+    "patternId": 2,
+    "track": 4,
+    "start": 20,
+    "len": 4
+   },
+   {
+    "id": 15,
+    "patternId": 5,
+    "track": 0,
+    "start": 24,
+    "len": 7
+   },
+   {
+    "id": 16,
+    "patternId": 6,
+    "track": 0,
+    "start": 31,
+    "len": 1
+   },
+   {
+    "id": 17,
+    "patternId": 4,
+    "track": 3,
+    "start": 24,
+    "len": 8
+   },
+   {
+    "id": 18,
+    "patternId": 1,
+    "track": 2,
+    "start": 24,
+    "len": 8
+   },
+   {
+    "id": 19,
+    "patternId": 3,
+    "track": 4,
+    "start": 24,
+    "len": 8
+   }
+  ],
+  "nextClipId": 20,
+  "tracks": [
+   {
+    "vol": 0.85
+   },
+   {
+    "vol": 0.8,
+    "pan": 0,
+    "mute": false,
+    "route": 8,
+    "scSource": 0,
+    "scDepth": 0.7
+   },
+   {
+    "vol": 0.9,
+    "pan": 0,
+    "mute": false,
+    "route": 8,
+    "scSource": 0,
+    "scDepth": 0.7
+   },
+   {
+    "vol": 0.8,
+    "pan": 0,
+    "mute": false,
+    "route": 8,
+    "scSource": 0,
+    "scDepth": 0.7
+   },
+   {
+    "vol": 0.8,
+    "pan": 0.2,
+    "mute": false,
+    "route": 8,
+    "scSource": 0,
+    "scDepth": 0.7
+   },
+   {
+    "vol": 0.8,
+    "pan": 0,
+    "mute": false,
+    "route": 0,
+    "scSource": 0,
+    "scDepth": 0.7
+   },
+   {
+    "vol": 0.8,
+    "pan": 0,
+    "mute": false,
+    "route": 0,
+    "scSource": 1,
+    "scDepth": 0.3
+   },
+   {
+    "vol": 0.7,
+    "pan": 0,
+    "mute": false,
+    "route": 0,
+    "scSource": 0,
+    "scDepth": 0.7
+   },
+   {
+    "vol": 0.8,
+    "pan": 0,
+    "mute": false,
+    "route": 0,
+    "scSource": 0,
+    "scDepth": 0.7
+   }
+  ],
+  "automation": {
+   "enabled": true,
+   "values": [
+    0.25,
+    0.45,
+    0.65,
+    0.85,
+    1,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1,
+    0.5,
+    0.633,
+    0.767,
+    0.9,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ]
+  },
+  "scale": {
+   "root": 9,
+   "type": "minor"
+  }
+ },
+ "view": {
+  "curPattern": 2,
+  "curChannel": 5,
+  "mode": "song"
+ }
+}

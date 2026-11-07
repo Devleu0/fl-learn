@@ -1,0 +1,1029 @@
+{
+ "format": "pattern-lab-project",
+ "version": 1,
+ "app": "FL 실습",
+ "savedAt": "2026-11-07T07:48:01+00:00",
+ "name": "Lo-fi - Rainy Window",
+ "song": {
+  "bpm": 80,
+  "swing": 0.45,
+  "channels": [
+   {
+    "id": 0,
+    "name": "Kick",
+    "inst": "kick",
+    "color": "#e0703c",
+    "insert": 1,
+    "vol": 0.85,
+    "mute": false
+   },
+   {
+    "id": 1,
+    "name": "Snare",
+    "inst": "snare",
+    "color": "#e0c040",
+    "insert": 2,
+    "vol": 0.6,
+    "mute": false
+   },
+   {
+    "id": 2,
+    "name": "Clap",
+    "inst": "clap",
+    "color": "#e05a7a",
+    "insert": 3,
+    "vol": 0.5,
+    "mute": false
+   },
+   {
+    "id": 3,
+    "name": "Hat",
+    "inst": "hat",
+    "color": "#3cc8c0",
+    "insert": 4,
+    "vol": 0.5,
+    "mute": false
+   },
+   {
+    "id": 4,
+    "name": "808 Bass",
+    "inst": "bass",
+    "color": "#c95ad6",
+    "insert": 5,
+    "vol": 0.8,
+    "mute": false
+   },
+   {
+    "id": 5,
+    "name": "Keys",
+    "inst": "keys",
+    "color": "#4f9de0",
+    "insert": 6,
+    "vol": 0.9,
+    "mute": false
+   },
+   {
+    "id": 6,
+    "name": "Lead",
+    "inst": "lead",
+    "color": "#5cc275",
+    "insert": 7,
+    "vol": 0.6,
+    "mute": false
+   }
+  ],
+  "patterns": [
+   {
+    "id": 1,
+    "name": "Rhodes",
+    "color": "#4f9de0",
+    "minBars": 4,
+    "notes": {
+     "5": [
+      {
+       "pos": 0,
+       "len": 12,
+       "key": 50,
+       "vel": 0.5
+      },
+      {
+       "pos": 0,
+       "len": 12,
+       "key": 53,
+       "vel": 0.5
+      },
+      {
+       "pos": 0,
+       "len": 12,
+       "key": 57,
+       "vel": 0.5
+      },
+      {
+       "pos": 0,
+       "len": 12,
+       "key": 60,
+       "vel": 0.5
+      },
+      {
+       "pos": 0,
+       "len": 12,
+       "key": 64,
+       "vel": 0.5
+      },
+      {
+       "pos": 12,
+       "len": 4,
+       "key": 50,
+       "vel": 0.38
+      },
+      {
+       "pos": 12,
+       "len": 4,
+       "key": 53,
+       "vel": 0.38
+      },
+      {
+       "pos": 12,
+       "len": 4,
+       "key": 57,
+       "vel": 0.38
+      },
+      {
+       "pos": 12,
+       "len": 4,
+       "key": 60,
+       "vel": 0.38
+      },
+      {
+       "pos": 12,
+       "len": 4,
+       "key": 64,
+       "vel": 0.38
+      },
+      {
+       "pos": 16,
+       "len": 12,
+       "key": 53,
+       "vel": 0.5
+      },
+      {
+       "pos": 16,
+       "len": 12,
+       "key": 59,
+       "vel": 0.5
+      },
+      {
+       "pos": 16,
+       "len": 12,
+       "key": 64,
+       "vel": 0.5
+      },
+      {
+       "pos": 16,
+       "len": 12,
+       "key": 67,
+       "vel": 0.5
+      },
+      {
+       "pos": 28,
+       "len": 4,
+       "key": 53,
+       "vel": 0.38
+      },
+      {
+       "pos": 28,
+       "len": 4,
+       "key": 59,
+       "vel": 0.38
+      },
+      {
+       "pos": 28,
+       "len": 4,
+       "key": 64,
+       "vel": 0.38
+      },
+      {
+       "pos": 28,
+       "len": 4,
+       "key": 67,
+       "vel": 0.38
+      },
+      {
+       "pos": 32,
+       "len": 12,
+       "key": 52,
+       "vel": 0.5
+      },
+      {
+       "pos": 32,
+       "len": 12,
+       "key": 55,
+       "vel": 0.5
+      },
+      {
+       "pos": 32,
+       "len": 12,
+       "key": 59,
+       "vel": 0.5
+      },
+      {
+       "pos": 32,
+       "len": 12,
+       "key": 62,
+       "vel": 0.5
+      },
+      {
+       "pos": 44,
+       "len": 4,
+       "key": 52,
+       "vel": 0.38
+      },
+      {
+       "pos": 44,
+       "len": 4,
+       "key": 55,
+       "vel": 0.38
+      },
+      {
+       "pos": 44,
+       "len": 4,
+       "key": 59,
+       "vel": 0.38
+      },
+      {
+       "pos": 44,
+       "len": 4,
+       "key": 62,
+       "vel": 0.38
+      },
+      {
+       "pos": 48,
+       "len": 12,
+       "key": 60,
+       "vel": 0.5
+      },
+      {
+       "pos": 48,
+       "len": 12,
+       "key": 64,
+       "vel": 0.5
+      },
+      {
+       "pos": 48,
+       "len": 12,
+       "key": 67,
+       "vel": 0.5
+      },
+      {
+       "pos": 48,
+       "len": 12,
+       "key": 71,
+       "vel": 0.5
+      },
+      {
+       "pos": 60,
+       "len": 4,
+       "key": 60,
+       "vel": 0.38
+      },
+      {
+       "pos": 60,
+       "len": 4,
+       "key": 64,
+       "vel": 0.38
+      },
+      {
+       "pos": 60,
+       "len": 4,
+       "key": 67,
+       "vel": 0.38
+      },
+      {
+       "pos": 60,
+       "len": 4,
+       "key": 71,
+       "vel": 0.38
+      }
+     ]
+    }
+   },
+   {
+    "id": 2,
+    "name": "Bass",
+    "color": "#3cc8c0",
+    "minBars": 4,
+    "notes": {
+     "4": [
+      {
+       "pos": 0,
+       "len": 6,
+       "key": 38,
+       "vel": 0.8
+      },
+      {
+       "pos": 8,
+       "len": 2,
+       "key": 45,
+       "vel": 0.6
+      },
+      {
+       "pos": 10,
+       "len": 4,
+       "key": 38,
+       "vel": 0.7
+      },
+      {
+       "pos": 16,
+       "len": 6,
+       "key": 43,
+       "vel": 0.8
+      },
+      {
+       "pos": 24,
+       "len": 2,
+       "key": 50,
+       "vel": 0.6
+      },
+      {
+       "pos": 26,
+       "len": 4,
+       "key": 43,
+       "vel": 0.7
+      },
+      {
+       "pos": 32,
+       "len": 6,
+       "key": 36,
+       "vel": 0.8
+      },
+      {
+       "pos": 40,
+       "len": 2,
+       "key": 43,
+       "vel": 0.6
+      },
+      {
+       "pos": 42,
+       "len": 4,
+       "key": 36,
+       "vel": 0.7
+      },
+      {
+       "pos": 48,
+       "len": 6,
+       "key": 45,
+       "vel": 0.8
+      },
+      {
+       "pos": 56,
+       "len": 2,
+       "key": 52,
+       "vel": 0.6
+      },
+      {
+       "pos": 58,
+       "len": 4,
+       "key": 45,
+       "vel": 0.7
+      }
+     ]
+    }
+   },
+   {
+    "id": 3,
+    "name": "Melody",
+    "color": "#c95ad6",
+    "minBars": 4,
+    "notes": {
+     "6": [
+      {
+       "pos": 2,
+       "len": 4,
+       "key": 72,
+       "vel": 0.63
+      },
+      {
+       "pos": 6,
+       "len": 2,
+       "key": 74,
+       "vel": 0.55
+      },
+      {
+       "pos": 8,
+       "len": 6,
+       "key": 77,
+       "vel": 0.63
+      },
+      {
+       "pos": 18,
+       "len": 2,
+       "key": 76,
+       "vel": 0.55
+      },
+      {
+       "pos": 20,
+       "len": 4,
+       "key": 74,
+       "vel": 0.63
+      },
+      {
+       "pos": 26,
+       "len": 4,
+       "key": 71,
+       "vel": 0.55
+      },
+      {
+       "pos": 32,
+       "len": 6,
+       "key": 72,
+       "vel": 0.63
+      },
+      {
+       "pos": 40,
+       "len": 2,
+       "key": 76,
+       "vel": 0.55
+      },
+      {
+       "pos": 42,
+       "len": 4,
+       "key": 79,
+       "vel": 0.63
+      },
+      {
+       "pos": 50,
+       "len": 4,
+       "key": 76,
+       "vel": 0.55
+      },
+      {
+       "pos": 54,
+       "len": 2,
+       "key": 74,
+       "vel": 0.63
+      },
+      {
+       "pos": 56,
+       "len": 8,
+       "key": 72,
+       "vel": 0.55
+      }
+     ]
+    }
+   },
+   {
+    "id": 4,
+    "name": "Boom Bap A",
+    "color": "#5cc275",
+    "minBars": 1,
+    "notes": {
+     "0": [
+      {
+       "pos": 0,
+       "len": 1,
+       "key": 60,
+       "vel": 0.9
+      },
+      {
+       "pos": 7,
+       "len": 1,
+       "key": 60,
+       "vel": 0.7
+      },
+      {
+       "pos": 10,
+       "len": 1,
+       "key": 60,
+       "vel": 0.7
+      }
+     ],
+     "1": [
+      {
+       "pos": 4,
+       "len": 1,
+       "key": 60,
+       "vel": 0.65
+      },
+      {
+       "pos": 12,
+       "len": 1,
+       "key": 60,
+       "vel": 0.65
+      }
+     ],
+     "3": [
+      {
+       "pos": 0,
+       "len": 1,
+       "key": 60,
+       "vel": 0.38
+      },
+      {
+       "pos": 2,
+       "len": 1,
+       "key": 60,
+       "vel": 0.28
+      },
+      {
+       "pos": 3,
+       "len": 1,
+       "key": 60,
+       "vel": 0.2
+      },
+      {
+       "pos": 4,
+       "len": 1,
+       "key": 60,
+       "vel": 0.38
+      },
+      {
+       "pos": 6,
+       "len": 1,
+       "key": 60,
+       "vel": 0.28
+      },
+      {
+       "pos": 8,
+       "len": 1,
+       "key": 60,
+       "vel": 0.38
+      },
+      {
+       "pos": 10,
+       "len": 1,
+       "key": 60,
+       "vel": 0.28
+      },
+      {
+       "pos": 11,
+       "len": 1,
+       "key": 60,
+       "vel": 0.2
+      },
+      {
+       "pos": 12,
+       "len": 1,
+       "key": 60,
+       "vel": 0.38
+      },
+      {
+       "pos": 14,
+       "len": 1,
+       "key": 60,
+       "vel": 0.28
+      }
+     ]
+    }
+   },
+   {
+    "id": 5,
+    "name": "Boom Bap B",
+    "color": "#8a8ff0",
+    "minBars": 1,
+    "notes": {
+     "0": [
+      {
+       "pos": 0,
+       "len": 1,
+       "key": 60,
+       "vel": 0.85
+      },
+      {
+       "pos": 3,
+       "len": 1,
+       "key": 60,
+       "vel": 0.65
+      },
+      {
+       "pos": 10,
+       "len": 1,
+       "key": 60,
+       "vel": 0.65
+      },
+      {
+       "pos": 13,
+       "len": 1,
+       "key": 60,
+       "vel": 0.65
+      }
+     ],
+     "1": [
+      {
+       "pos": 4,
+       "len": 1,
+       "key": 60,
+       "vel": 0.65
+      },
+      {
+       "pos": 12,
+       "len": 1,
+       "key": 60,
+       "vel": 0.65
+      },
+      {
+       "pos": 15,
+       "len": 1,
+       "key": 60,
+       "vel": 0.25
+      }
+     ],
+     "3": [
+      {
+       "pos": 0,
+       "len": 1,
+       "key": 60,
+       "vel": 0.36
+      },
+      {
+       "pos": 2,
+       "len": 1,
+       "key": 60,
+       "vel": 0.26
+      },
+      {
+       "pos": 4,
+       "len": 1,
+       "key": 60,
+       "vel": 0.36
+      },
+      {
+       "pos": 6,
+       "len": 1,
+       "key": 60,
+       "vel": 0.26
+      },
+      {
+       "pos": 8,
+       "len": 1,
+       "key": 60,
+       "vel": 0.36
+      },
+      {
+       "pos": 10,
+       "len": 1,
+       "key": 60,
+       "vel": 0.26
+      },
+      {
+       "pos": 12,
+       "len": 1,
+       "key": 60,
+       "vel": 0.36
+      },
+      {
+       "pos": 14,
+       "len": 1,
+       "key": 60,
+       "vel": 0.26
+      }
+     ]
+    }
+   }
+  ],
+  "nextPatternId": 6,
+  "clips": [
+   {
+    "id": 1,
+    "patternId": 1,
+    "track": 2,
+    "start": 0,
+    "len": 4
+   },
+   {
+    "id": 2,
+    "patternId": 4,
+    "track": 0,
+    "start": 4,
+    "len": 1
+   },
+   {
+    "id": 3,
+    "patternId": 4,
+    "track": 0,
+    "start": 5,
+    "len": 1
+   },
+   {
+    "id": 4,
+    "patternId": 4,
+    "track": 0,
+    "start": 6,
+    "len": 1
+   },
+   {
+    "id": 5,
+    "patternId": 5,
+    "track": 0,
+    "start": 7,
+    "len": 1
+   },
+   {
+    "id": 6,
+    "patternId": 4,
+    "track": 0,
+    "start": 8,
+    "len": 1
+   },
+   {
+    "id": 7,
+    "patternId": 4,
+    "track": 0,
+    "start": 9,
+    "len": 1
+   },
+   {
+    "id": 8,
+    "patternId": 4,
+    "track": 0,
+    "start": 10,
+    "len": 1
+   },
+   {
+    "id": 9,
+    "patternId": 5,
+    "track": 0,
+    "start": 11,
+    "len": 1
+   },
+   {
+    "id": 10,
+    "patternId": 2,
+    "track": 3,
+    "start": 4,
+    "len": 8
+   },
+   {
+    "id": 11,
+    "patternId": 1,
+    "track": 2,
+    "start": 4,
+    "len": 8
+   },
+   {
+    "id": 12,
+    "patternId": 4,
+    "track": 0,
+    "start": 12,
+    "len": 1
+   },
+   {
+    "id": 13,
+    "patternId": 4,
+    "track": 0,
+    "start": 13,
+    "len": 1
+   },
+   {
+    "id": 14,
+    "patternId": 4,
+    "track": 0,
+    "start": 14,
+    "len": 1
+   },
+   {
+    "id": 15,
+    "patternId": 5,
+    "track": 0,
+    "start": 15,
+    "len": 1
+   },
+   {
+    "id": 16,
+    "patternId": 4,
+    "track": 0,
+    "start": 16,
+    "len": 1
+   },
+   {
+    "id": 17,
+    "patternId": 4,
+    "track": 0,
+    "start": 17,
+    "len": 1
+   },
+   {
+    "id": 18,
+    "patternId": 4,
+    "track": 0,
+    "start": 18,
+    "len": 1
+   },
+   {
+    "id": 19,
+    "patternId": 5,
+    "track": 0,
+    "start": 19,
+    "len": 1
+   },
+   {
+    "id": 20,
+    "patternId": 2,
+    "track": 3,
+    "start": 12,
+    "len": 8
+   },
+   {
+    "id": 21,
+    "patternId": 1,
+    "track": 2,
+    "start": 12,
+    "len": 8
+   },
+   {
+    "id": 22,
+    "patternId": 3,
+    "track": 4,
+    "start": 12,
+    "len": 8
+   },
+   {
+    "id": 23,
+    "patternId": 4,
+    "track": 0,
+    "start": 20,
+    "len": 1
+   },
+   {
+    "id": 24,
+    "patternId": 4,
+    "track": 0,
+    "start": 21,
+    "len": 1
+   },
+   {
+    "id": 25,
+    "patternId": 4,
+    "track": 0,
+    "start": 22,
+    "len": 1
+   },
+   {
+    "id": 26,
+    "patternId": 5,
+    "track": 0,
+    "start": 23,
+    "len": 1
+   },
+   {
+    "id": 27,
+    "patternId": 4,
+    "track": 0,
+    "start": 24,
+    "len": 1
+   },
+   {
+    "id": 28,
+    "patternId": 4,
+    "track": 0,
+    "start": 25,
+    "len": 1
+   },
+   {
+    "id": 29,
+    "patternId": 4,
+    "track": 0,
+    "start": 26,
+    "len": 1
+   },
+   {
+    "id": 30,
+    "patternId": 5,
+    "track": 0,
+    "start": 27,
+    "len": 1
+   },
+   {
+    "id": 31,
+    "patternId": 2,
+    "track": 3,
+    "start": 20,
+    "len": 8
+   },
+   {
+    "id": 32,
+    "patternId": 1,
+    "track": 2,
+    "start": 20,
+    "len": 8
+   },
+   {
+    "id": 33,
+    "patternId": 3,
+    "track": 4,
+    "start": 20,
+    "len": 8
+   },
+   {
+    "id": 34,
+    "patternId": 1,
+    "track": 2,
+    "start": 28,
+    "len": 4
+   },
+   {
+    "id": 35,
+    "patternId": 3,
+    "track": 4,
+    "start": 28,
+    "len": 4
+   }
+  ],
+  "nextClipId": 36,
+  "tracks": [
+   {
+    "vol": 0.85
+   },
+   {
+    "vol": 0.8,
+    "pan": 0,
+    "mute": false,
+    "route": 8,
+    "scSource": 0,
+    "scDepth": 0.7
+   },
+   {
+    "vol": 0.8,
+    "pan": 0,
+    "mute": false,
+    "route": 8,
+    "scSource": 0,
+    "scDepth": 0.7
+   },
+   {
+    "vol": 0.8,
+    "pan": 0,
+    "mute": false,
+    "route": 8,
+    "scSource": 0,
+    "scDepth": 0.7
+   },
+   {
+    "vol": 0.8,
+    "pan": -0.15,
+    "mute": false,
+    "route": 8,
+    "scSource": 0,
+    "scDepth": 0.7
+   },
+   {
+    "vol": 0.8,
+    "pan": 0,
+    "mute": false,
+    "route": 0,
+    "scSource": 0,
+    "scDepth": 0.7
+   },
+   {
+    "vol": 0.8,
+    "pan": 0,
+    "mute": false,
+    "route": 0,
+    "scSource": 0,
+    "scDepth": 0.7
+   },
+   {
+    "vol": 0.6,
+    "pan": 0.1,
+    "mute": false,
+    "route": 0,
+    "scSource": 0,
+    "scDepth": 0.7
+   },
+   {
+    "vol": 0.75,
+    "pan": 0,
+    "mute": false,
+    "route": 0,
+    "scSource": 0,
+    "scDepth": 0.7
+   }
+  ],
+  "automation": {
+   "enabled": true,
+   "values": [
+    0.45,
+    0.527,
+    0.603,
+    0.68,
+    0.72,
+    0.72,
+    0.72,
+    0.72,
+    0.72,
+    0.72,
+    0.72,
+    0.72,
+    0.72,
+    0.72,
+    0.72,
+    0.72,
+    0.72,
+    0.72,
+    0.72,
+    0.72,
+    0.72,
+    0.72,
+    0.72,
+    0.72,
+    0.72,
+    0.72,
+    0.72,
+    0.72,
+    0.6,
+    0.525,
+    0.45,
+    0.375,
+    0.3
+   ]
+  },
+  "scale": {
+   "root": 0,
+   "type": "major"
+  }
+ },
+ "view": {
+  "curPattern": 1,
+  "curChannel": 5,
+  "mode": "song"
+ }
+}

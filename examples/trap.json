@@ -1,0 +1,994 @@
+{
+ "format": "pattern-lab-project",
+ "version": 1,
+ "app": "FL 실습",
+ "savedAt": "2026-11-07T07:48:01+00:00",
+ "name": "Trap - Night Drive",
+ "song": {
+  "bpm": 140,
+  "swing": 0,
+  "channels": [
+   {
+    "id": 0,
+    "name": "Kick",
+    "inst": "kick",
+    "color": "#e0703c",
+    "insert": 1,
+    "vol": 0.95,
+    "mute": false
+   },
+   {
+    "id": 1,
+    "name": "Snare",
+    "inst": "snare",
+    "color": "#e0c040",
+    "insert": 2,
+    "vol": 0.75,
+    "mute": false
+   },
+   {
+    "id": 2,
+    "name": "Clap",
+    "inst": "clap",
+    "color": "#e05a7a",
+    "insert": 3,
+    "vol": 0.65,
+    "mute": false
+   },
+   {
+    "id": 3,
+    "name": "Hat",
+    "inst": "hat",
+    "color": "#3cc8c0",
+    "insert": 4,
+    "vol": 0.6,
+    "mute": false
+   },
+   {
+    "id": 4,
+    "name": "808 Bass",
+    "inst": "bass",
+    "color": "#c95ad6",
+    "insert": 5,
+    "vol": 0.9,
+    "mute": false
+   },
+   {
+    "id": 5,
+    "name": "Keys",
+    "inst": "keys",
+    "color": "#4f9de0",
+    "insert": 6,
+    "vol": 0.75,
+    "mute": false
+   },
+   {
+    "id": 6,
+    "name": "Lead",
+    "inst": "lead",
+    "color": "#5cc275",
+    "insert": 7,
+    "vol": 0.7,
+    "mute": false
+   }
+  ],
+  "patterns": [
+   {
+    "id": 1,
+    "name": "Bells",
+    "color": "#4f9de0",
+    "minBars": 4,
+    "notes": {
+     "5": [
+      {
+       "pos": 0,
+       "len": 2,
+       "key": 69,
+       "vel": 0.7
+      },
+      {
+       "pos": 3,
+       "len": 2,
+       "key": 72,
+       "vel": 0.55
+      },
+      {
+       "pos": 6,
+       "len": 2,
+       "key": 76,
+       "vel": 0.55
+      },
+      {
+       "pos": 8,
+       "len": 2,
+       "key": 72,
+       "vel": 0.7
+      },
+      {
+       "pos": 11,
+       "len": 2,
+       "key": 76,
+       "vel": 0.55
+      },
+      {
+       "pos": 14,
+       "len": 2,
+       "key": 69,
+       "vel": 0.55
+      },
+      {
+       "pos": 16,
+       "len": 2,
+       "key": 65,
+       "vel": 0.7
+      },
+      {
+       "pos": 19,
+       "len": 2,
+       "key": 69,
+       "vel": 0.55
+      },
+      {
+       "pos": 22,
+       "len": 2,
+       "key": 72,
+       "vel": 0.55
+      },
+      {
+       "pos": 24,
+       "len": 2,
+       "key": 69,
+       "vel": 0.7
+      },
+      {
+       "pos": 27,
+       "len": 2,
+       "key": 72,
+       "vel": 0.55
+      },
+      {
+       "pos": 30,
+       "len": 2,
+       "key": 65,
+       "vel": 0.55
+      },
+      {
+       "pos": 32,
+       "len": 2,
+       "key": 62,
+       "vel": 0.7
+      },
+      {
+       "pos": 35,
+       "len": 2,
+       "key": 65,
+       "vel": 0.55
+      },
+      {
+       "pos": 38,
+       "len": 2,
+       "key": 69,
+       "vel": 0.55
+      },
+      {
+       "pos": 40,
+       "len": 2,
+       "key": 65,
+       "vel": 0.7
+      },
+      {
+       "pos": 43,
+       "len": 2,
+       "key": 69,
+       "vel": 0.55
+      },
+      {
+       "pos": 46,
+       "len": 2,
+       "key": 62,
+       "vel": 0.55
+      },
+      {
+       "pos": 48,
+       "len": 2,
+       "key": 64,
+       "vel": 0.7
+      },
+      {
+       "pos": 51,
+       "len": 2,
+       "key": 68,
+       "vel": 0.55
+      },
+      {
+       "pos": 54,
+       "len": 2,
+       "key": 71,
+       "vel": 0.55
+      },
+      {
+       "pos": 56,
+       "len": 2,
+       "key": 68,
+       "vel": 0.7
+      },
+      {
+       "pos": 59,
+       "len": 2,
+       "key": 71,
+       "vel": 0.55
+      },
+      {
+       "pos": 62,
+       "len": 2,
+       "key": 64,
+       "vel": 0.55
+      }
+     ]
+    }
+   },
+   {
+    "id": 2,
+    "name": "Hook",
+    "color": "#3cc8c0",
+    "minBars": 4,
+    "notes": {
+     "6": [
+      {
+       "pos": 0,
+       "len": 3,
+       "key": 76,
+       "vel": 0.8
+      },
+      {
+       "pos": 4,
+       "len": 2,
+       "key": 79,
+       "vel": 0.7
+      },
+      {
+       "pos": 6,
+       "len": 2,
+       "key": 76,
+       "vel": 0.8
+      },
+      {
+       "pos": 8,
+       "len": 4,
+       "key": 74,
+       "vel": 0.7
+      },
+      {
+       "pos": 12,
+       "len": 4,
+       "key": 72,
+       "vel": 0.8
+      },
+      {
+       "pos": 16,
+       "len": 3,
+       "key": 72,
+       "vel": 0.7
+      },
+      {
+       "pos": 20,
+       "len": 2,
+       "key": 74,
+       "vel": 0.8
+      },
+      {
+       "pos": 22,
+       "len": 2,
+       "key": 72,
+       "vel": 0.7
+      },
+      {
+       "pos": 24,
+       "len": 8,
+       "key": 69,
+       "vel": 0.8
+      },
+      {
+       "pos": 32,
+       "len": 3,
+       "key": 74,
+       "vel": 0.7
+      },
+      {
+       "pos": 36,
+       "len": 2,
+       "key": 76,
+       "vel": 0.8
+      },
+      {
+       "pos": 38,
+       "len": 2,
+       "key": 74,
+       "vel": 0.7
+      },
+      {
+       "pos": 40,
+       "len": 4,
+       "key": 72,
+       "vel": 0.8
+      },
+      {
+       "pos": 44,
+       "len": 4,
+       "key": 74,
+       "vel": 0.7
+      },
+      {
+       "pos": 48,
+       "len": 3,
+       "key": 76,
+       "vel": 0.8
+      },
+      {
+       "pos": 52,
+       "len": 2,
+       "key": 79,
+       "vel": 0.7
+      },
+      {
+       "pos": 54,
+       "len": 2,
+       "key": 81,
+       "vel": 0.8
+      },
+      {
+       "pos": 56,
+       "len": 8,
+       "key": 76,
+       "vel": 0.7
+      }
+     ]
+    }
+   },
+   {
+    "id": 3,
+    "name": "808 Trap",
+    "color": "#c95ad6",
+    "minBars": 4,
+    "notes": {
+     "4": [
+      {
+       "pos": 0,
+       "len": 6,
+       "key": 45,
+       "vel": 0.95
+      },
+      {
+       "pos": 7,
+       "len": 3,
+       "key": 45,
+       "vel": 0.8
+      },
+      {
+       "pos": 10,
+       "len": 4,
+       "key": 45,
+       "vel": 0.9
+      },
+      {
+       "pos": 14,
+       "len": 2,
+       "key": 57,
+       "vel": 0.6
+      },
+      {
+       "pos": 16,
+       "len": 6,
+       "key": 41,
+       "vel": 0.95
+      },
+      {
+       "pos": 23,
+       "len": 3,
+       "key": 41,
+       "vel": 0.8
+      },
+      {
+       "pos": 26,
+       "len": 4,
+       "key": 41,
+       "vel": 0.9
+      },
+      {
+       "pos": 30,
+       "len": 2,
+       "key": 53,
+       "vel": 0.6
+      },
+      {
+       "pos": 32,
+       "len": 6,
+       "key": 38,
+       "vel": 0.95
+      },
+      {
+       "pos": 39,
+       "len": 3,
+       "key": 38,
+       "vel": 0.8
+      },
+      {
+       "pos": 42,
+       "len": 4,
+       "key": 38,
+       "vel": 0.9
+      },
+      {
+       "pos": 46,
+       "len": 2,
+       "key": 50,
+       "vel": 0.6
+      },
+      {
+       "pos": 48,
+       "len": 6,
+       "key": 40,
+       "vel": 0.95
+      },
+      {
+       "pos": 55,
+       "len": 3,
+       "key": 40,
+       "vel": 0.8
+      },
+      {
+       "pos": 58,
+       "len": 4,
+       "key": 40,
+       "vel": 0.9
+      },
+      {
+       "pos": 62,
+       "len": 2,
+       "key": 52,
+       "vel": 0.6
+      }
+     ]
+    }
+   },
+   {
+    "id": 4,
+    "name": "Trap Drums A",
+    "color": "#5cc275",
+    "minBars": 1,
+    "notes": {
+     "0": [
+      {
+       "pos": 0,
+       "len": 1,
+       "key": 60,
+       "vel": 1
+      },
+      {
+       "pos": 7,
+       "len": 1,
+       "key": 60,
+       "vel": 0.85
+      },
+      {
+       "pos": 10,
+       "len": 1,
+       "key": 60,
+       "vel": 0.85
+      }
+     ],
+     "1": [
+      {
+       "pos": 8,
+       "len": 1,
+       "key": 60,
+       "vel": 0.9
+      }
+     ],
+     "2": [
+      {
+       "pos": 8,
+       "len": 1,
+       "key": 60,
+       "vel": 0.7
+      }
+     ],
+     "3": [
+      {
+       "pos": 0,
+       "len": 1,
+       "key": 60,
+       "vel": 0.55
+      },
+      {
+       "pos": 2,
+       "len": 1,
+       "key": 60,
+       "vel": 0.4
+      },
+      {
+       "pos": 4,
+       "len": 1,
+       "key": 60,
+       "vel": 0.55
+      },
+      {
+       "pos": 6,
+       "len": 1,
+       "key": 60,
+       "vel": 0.4
+      },
+      {
+       "pos": 7,
+       "len": 1,
+       "key": 60,
+       "vel": 0.3
+      },
+      {
+       "pos": 8,
+       "len": 1,
+       "key": 60,
+       "vel": 0.55
+      },
+      {
+       "pos": 10,
+       "len": 1,
+       "key": 60,
+       "vel": 0.4
+      },
+      {
+       "pos": 12,
+       "len": 1,
+       "key": 60,
+       "vel": 0.55
+      },
+      {
+       "pos": 13,
+       "len": 1,
+       "key": 60,
+       "vel": 0.3
+      },
+      {
+       "pos": 14,
+       "len": 1,
+       "key": 60,
+       "vel": 0.4
+      },
+      {
+       "pos": 15,
+       "len": 1,
+       "key": 60,
+       "vel": 0.5
+      }
+     ]
+    }
+   },
+   {
+    "id": 5,
+    "name": "Trap Drums B",
+    "color": "#8a8ff0",
+    "minBars": 1,
+    "notes": {
+     "0": [
+      {
+       "pos": 0,
+       "len": 1,
+       "key": 60,
+       "vel": 1
+      },
+      {
+       "pos": 3,
+       "len": 1,
+       "key": 60,
+       "vel": 0.8
+      },
+      {
+       "pos": 10,
+       "len": 1,
+       "key": 60,
+       "vel": 0.8
+      },
+      {
+       "pos": 11,
+       "len": 1,
+       "key": 60,
+       "vel": 0.8
+      }
+     ],
+     "1": [
+      {
+       "pos": 8,
+       "len": 1,
+       "key": 60,
+       "vel": 0.9
+      },
+      {
+       "pos": 15,
+       "len": 1,
+       "key": 60,
+       "vel": 0.35
+      }
+     ],
+     "2": [
+      {
+       "pos": 8,
+       "len": 1,
+       "key": 60,
+       "vel": 0.7
+      }
+     ],
+     "3": [
+      {
+       "pos": 0,
+       "len": 1,
+       "key": 60,
+       "vel": 0.55
+      },
+      {
+       "pos": 2,
+       "len": 1,
+       "key": 60,
+       "vel": 0.4
+      },
+      {
+       "pos": 4,
+       "len": 1,
+       "key": 60,
+       "vel": 0.55
+      },
+      {
+       "pos": 5,
+       "len": 1,
+       "key": 60,
+       "vel": 0.35
+      },
+      {
+       "pos": 6,
+       "len": 1,
+       "key": 60,
+       "vel": 0.4
+      },
+      {
+       "pos": 8,
+       "len": 1,
+       "key": 60,
+       "vel": 0.55
+      },
+      {
+       "pos": 10,
+       "len": 1,
+       "key": 60,
+       "vel": 0.4
+      },
+      {
+       "pos": 11,
+       "len": 1,
+       "key": 60,
+       "vel": 0.35
+      },
+      {
+       "pos": 12,
+       "len": 1,
+       "key": 60,
+       "vel": 0.55
+      },
+      {
+       "pos": 14,
+       "len": 1,
+       "key": 60,
+       "vel": 0.4
+      }
+     ]
+    }
+   },
+   {
+    "id": 6,
+    "name": "Intro Hats",
+    "color": "#e0703c",
+    "minBars": 1,
+    "notes": {
+     "3": [
+      {
+       "pos": 0,
+       "len": 1,
+       "key": 60,
+       "vel": 0.35
+      },
+      {
+       "pos": 4,
+       "len": 1,
+       "key": 60,
+       "vel": 0.35
+      },
+      {
+       "pos": 8,
+       "len": 1,
+       "key": 60,
+       "vel": 0.35
+      },
+      {
+       "pos": 12,
+       "len": 1,
+       "key": 60,
+       "vel": 0.35
+      }
+     ]
+    }
+   }
+  ],
+  "nextPatternId": 7,
+  "clips": [
+   {
+    "id": 1,
+    "patternId": 1,
+    "track": 2,
+    "start": 0,
+    "len": 4
+   },
+   {
+    "id": 2,
+    "patternId": 2,
+    "track": 4,
+    "start": 0,
+    "len": 4
+   },
+   {
+    "id": 3,
+    "patternId": 6,
+    "track": 0,
+    "start": 2,
+    "len": 2
+   },
+   {
+    "id": 4,
+    "patternId": 4,
+    "track": 0,
+    "start": 4,
+    "len": 3
+   },
+   {
+    "id": 5,
+    "patternId": 5,
+    "track": 0,
+    "start": 7,
+    "len": 1
+   },
+   {
+    "id": 6,
+    "patternId": 4,
+    "track": 0,
+    "start": 8,
+    "len": 3
+   },
+   {
+    "id": 7,
+    "patternId": 5,
+    "track": 0,
+    "start": 11,
+    "len": 1
+   },
+   {
+    "id": 8,
+    "patternId": 3,
+    "track": 3,
+    "start": 4,
+    "len": 8
+   },
+   {
+    "id": 9,
+    "patternId": 1,
+    "track": 2,
+    "start": 4,
+    "len": 8
+   },
+   {
+    "id": 10,
+    "patternId": 2,
+    "track": 4,
+    "start": 4,
+    "len": 8
+   },
+   {
+    "id": 11,
+    "patternId": 4,
+    "track": 0,
+    "start": 12,
+    "len": 7
+   },
+   {
+    "id": 12,
+    "patternId": 5,
+    "track": 0,
+    "start": 19,
+    "len": 1
+   },
+   {
+    "id": 13,
+    "patternId": 3,
+    "track": 3,
+    "start": 12,
+    "len": 8
+   },
+   {
+    "id": 14,
+    "patternId": 1,
+    "track": 2,
+    "start": 12,
+    "len": 8
+   },
+   {
+    "id": 15,
+    "patternId": 4,
+    "track": 0,
+    "start": 20,
+    "len": 3
+   },
+   {
+    "id": 16,
+    "patternId": 5,
+    "track": 0,
+    "start": 23,
+    "len": 1
+   },
+   {
+    "id": 17,
+    "patternId": 4,
+    "track": 0,
+    "start": 24,
+    "len": 3
+   },
+   {
+    "id": 18,
+    "patternId": 5,
+    "track": 0,
+    "start": 27,
+    "len": 1
+   },
+   {
+    "id": 19,
+    "patternId": 3,
+    "track": 3,
+    "start": 20,
+    "len": 8
+   },
+   {
+    "id": 20,
+    "patternId": 1,
+    "track": 2,
+    "start": 20,
+    "len": 8
+   },
+   {
+    "id": 21,
+    "patternId": 2,
+    "track": 4,
+    "start": 20,
+    "len": 8
+   },
+   {
+    "id": 22,
+    "patternId": 1,
+    "track": 2,
+    "start": 28,
+    "len": 4
+   }
+  ],
+  "nextClipId": 23,
+  "tracks": [
+   {
+    "vol": 0.85
+   },
+   {
+    "vol": 0.8,
+    "pan": 0,
+    "mute": false,
+    "route": 8,
+    "scSource": 0,
+    "scDepth": 0.7
+   },
+   {
+    "vol": 0.8,
+    "pan": 0,
+    "mute": false,
+    "route": 8,
+    "scSource": 0,
+    "scDepth": 0.7
+   },
+   {
+    "vol": 0.8,
+    "pan": 0,
+    "mute": false,
+    "route": 8,
+    "scSource": 0,
+    "scDepth": 0.7
+   },
+   {
+    "vol": 0.8,
+    "pan": 0.12,
+    "mute": false,
+    "route": 8,
+    "scSource": 0,
+    "scDepth": 0.7
+   },
+   {
+    "vol": 0.9,
+    "pan": 0,
+    "mute": false,
+    "route": 0,
+    "scSource": 1,
+    "scDepth": 0.3
+   },
+   {
+    "vol": 0.7,
+    "pan": 0,
+    "mute": false,
+    "route": 0,
+    "scSource": 0,
+    "scDepth": 0.7
+   },
+   {
+    "vol": 0.7,
+    "pan": 0,
+    "mute": false,
+    "route": 0,
+    "scSource": 0,
+    "scDepth": 0.7
+   },
+   {
+    "vol": 0.9,
+    "pan": 0,
+    "mute": false,
+    "route": 0,
+    "scSource": 0,
+    "scDepth": 0.7
+   }
+  ],
+  "automation": {
+   "enabled": true,
+   "values": [
+    0.3,
+    0.45,
+    0.6,
+    0.75,
+    1,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1,
+    0.8,
+    0.65,
+    0.5,
+    0.35,
+    0.2
+   ]
+  },
+  "scale": {
+   "root": 9,
+   "type": "minor"
+  }
+ },
+ "view": {
+  "curPattern": 1,
+  "curChannel": 5,
+  "mode": "song"
+ }
+}

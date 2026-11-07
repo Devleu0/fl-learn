@@ -58,6 +58,22 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid 
 .menu .sep{border-top:1px solid var(--line);margin:6px 0}
 .menu .cap{font-size:11px;color:var(--dim);margin:4px 4px 2px}
 .menu input[type=text]{width:100%;margin:2px 0 4px}
+.modal{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;z-index:40;padding:16px}
+.modal.open{display:flex}
+.modal-box{background:var(--panel);border:1px solid var(--line);border-radius:10px;max-width:1000px;width:100%;max-height:calc(100vh - 32px);overflow:auto;padding:16px 18px}
+.modal-head{display:flex;align-items:center;gap:10px}
+.modal-head .t{flex:1;font-size:16px;font-weight:700}
+.ex-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin-top:12px}
+.ex-card{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.ex-card:hover{border-color:var(--accent)}
+.ex-card.cur{border-color:var(--ok)}
+.ex-genre{font-size:11px;color:var(--accent);font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+.ex-title{font-size:14px;font-weight:600}
+.ex-meta{font-size:12px;color:var(--dim)}
+.ex-card p{margin:0;font-size:12px;line-height:1.5}
+.ex-tags{display:flex;flex-wrap:wrap;gap:4px}
+.ex-tags span{font-size:11px;padding:1px 7px;border-radius:10px;background:var(--bg);border:1px solid var(--line);color:var(--dim)}
+.ex-card button{align-self:flex-start;margin-top:auto}
 #dropHint{position:fixed;inset:0;background:#000a;border:3px dashed var(--accent);display:none;place-items:center;font-size:18px;z-index:30;pointer-events:none}
 #dropHint.show{display:grid}
 main{flex:1;min-width:0;display:flex;flex-direction:column}
@@ -156,7 +172,7 @@ canvas{display:block}
         <button id="fmNew">새 프로젝트</button>
         <button id="fmOpen">프로젝트 열기 <kbd>Ctrl+O</kbd></button>
         <button id="fmSave">프로젝트 저장 <kbd>Ctrl+S</kbd></button>
-        <button id="fmDemo">예제 프로젝트 불러오기</button>
+        <button id="fmDemo">예제 곡 고르기</button>
         <div class="sep"></div>
         <div class="cap">내보내기</div>
         <button id="fmWav">곡을 WAV 오디오로</button>
@@ -223,8 +239,16 @@ canvas{display:block}
   </main>
 </div>
 <div id="toast"></div>
+<div class="modal" id="exModal" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <div class="modal-head"><span class="t">예제 곡 고르기</span><button id="exClose">닫기</button></div>
+    <div class="hint">장르를 고르면 완성된 곡이 열립니다. 재생해 보고, 패턴과 편곡을 바꿔 보며 장르의 특징을 익혀 보세요.</div>
+    <div class="ex-list" id="exList"></div>
+  </div>
+</div>
 <div id="dropHint">프로젝트 파일(.json)을 놓으면 엽니다</div>
 
+<script src="examples.js"></script>
 <script>
 'use strict';
 /* ============================================================
@@ -291,10 +315,13 @@ const EN = {
  '단계를 눌러 목표와 원리를 확인하세요. 조건을 채우면 자동으로 완료됩니다.':'Click a step to see its goal and principle. A step completes automatically when you meet its conditions.',
  '완료':'Done', '목표':'Goal', '해볼 것':'Try this', '원리':'Principle', '이 단계 화면 열기':"Open this step's screen", '다음 단계':'Next step',
  '잘라냈':'Cut', '복사했':'Copied',
+ '예제 곡 고르기':'Choose an example song', '예제 곡':'Examples', '불러오기':'Load',
+ '장르를 고르면 완성된 곡이 열립니다. 재생해 보고, 패턴과 편곡을 바꿔 보며 장르의 특징을 익혀 보세요.':'Pick a genre to open a finished song. Play it, then change its patterns and arrangement to learn what defines the genre.',
+ '예제 목록 파일(examples.js)을 읽지 못했습니다. 기본 예제만 쓸 수 있습니다.':'Could not read the example list (examples.js). Only the built-in example is available.',
  '복제본은 플레이리스트에 놓기 전까지 어디에서도 쓰이지 않습니다.':'The copy is not used anywhere until you place it in the playlist.',
  '패턴이 하나뿐이라 지울 수 없습니다.':'This is the only pattern, so it cannot be deleted.', '예제를 불러오면 지금 작업이 바뀝니다.':'Loading the example replaces your current work.',
  '예제를 불러왔습니다. SONG 모드로 재생해 보세요. 되돌리기(Ctrl+Z)로 이전 작업에 돌아갈 수 있습니다.':'Example loaded. Play it in SONG mode. Undo (Ctrl+Z) takes you back to your previous work.',
- '예제 보기 모드입니다. 바꾼 내용은 저장되지 않습니다. 저장하려면 "파일 > 예제 프로젝트 불러오기"를 누르세요.':'Example view mode. Changes are not saved. To keep it, choose "File > Load example project".',
+ '예제 보기 모드입니다. 바꾼 내용은 저장되지 않습니다. 저장하려면 "파일 > 예제 곡 고르기"에서 불러오세요.':'Example view mode. Changes are not saved. To keep it, load it from "File > Choose an example song".',
  // 가이드 단계
  '사운드 고르기':'Choose sounds', '곡에 쓸 소리들을 들어 보고 각각의 성격을 파악한다.':'Listen to the sounds for your song and get to know each one.',
  '채널 랙에서 채널 이름을 눌러 소리를 들어 본다 (3개 이상)':'In the Channel Rack, click channel names to hear them (3 or more)',
@@ -352,6 +379,7 @@ const EN_RE = [
  [/^파일로 저장하지 않은 변경 내용이 있습니다\. (.+) 계속할까요\?\n\(브라우저에는 자동 저장되어 있지만, 바뀐 프로젝트로 덮어써집니다\.\)$/, 'You have changes not saved to a file. $1 Continue?\n(Your work is auto-saved in the browser, but it will be replaced.)'],
  [/^"(.+)"을 지울까요\? 플레이리스트 클립 (\d+)개도 함께 지워집니다\.$/, 'Delete "$1"? Its $2 playlist clips will be deleted too.'],
  [/^"(.+)"을 지울까요\?$/, 'Delete "$1"?'],
+ [/^"(.+)" 예제를 불러왔습니다\. SONG 모드로 재생해 보세요\. 되돌리기\(Ctrl\+Z\)로 이전 작업에 돌아갈 수 있습니다\.$/, 'Loaded "$1". Play it in SONG mode. Undo (Ctrl+Z) takes you back to your previous work.'],
  [/^플레이리스트 1곳에서 사용 중$/, 'Used in 1 place in the playlist'],
  [/^플레이리스트 (\d+)곳에서 사용 중$/, 'Used in $1 places in the playlist'],
  [/^현재 패턴: (.+) \((\d+)마디\)$/, 'Current pattern: $1 ($2 bars)'],
@@ -873,6 +901,64 @@ function newProject(){
   state = Object.assign(defaultState(), keep); persist = true; prSel.clear(); seekPos.pat = 0; seekPos.song = 0;
   state.fileHash = songHash(); commit(); toast('새 프로젝트를 만들었습니다. 되돌리기(Ctrl+Z)로 이전 작업을 되살릴 수 있습니다.');
 }
+/* ---------- 장르별 예제 곡 (web/examples.js, examples/build_examples.py가 만듦) ---------- */
+const exampleList = () => Array.isArray(window.FL_EXAMPLES) ? window.FL_EXAMPLES : [];
+let currentExample = null;
+function stateFromProject(o, keep){
+  const song = sanitizeSong(o && o.song);
+  if(typeof song === 'string') return null;
+  const s = Object.assign(defaultState(), song, keep || {});
+  s.projectName = String((o && o.name) || '내 프로젝트').slice(0,60);
+  const v = (o && o.view) || {};
+  s.curPattern = s.patterns.some(p=>p.id === v.curPattern) ? v.curPattern : s.patterns[0].id;
+  s.curChannel = s.channels.some(c=>c.id === v.curChannel) ? v.curChannel : s.channels[0].id;
+  if(v.mode === 'song' || v.mode === 'pat') s.mode = v.mode;
+  return s;
+}
+function loadBuiltinDemo(){
+  if(!confirmDiscard('예제를 불러오면 지금 작업이 바뀝니다.')) return;
+  if(playing) stop();
+  const keep = {tab:state.tab, guideStep:state.guideStep, guideOpen:state.guideOpen, progress:state.progress};
+  persist = true; state = Object.assign(demoState(), keep, {projectName:'예제 - Lofi Loop'}); prSel.clear(); closeExamples(); commit();
+  toast('예제를 불러왔습니다. SONG 모드로 재생해 보세요. 되돌리기(Ctrl+Z)로 이전 작업에 돌아갈 수 있습니다.');
+}
+function loadExample(id){
+  const ex = exampleList().find(e=>e.id === id);
+  if(!ex) return;
+  if(!confirmDiscard('예제를 불러오면 지금 작업이 바뀝니다.')) return;
+  const keep = {guideStep:state.guideStep, guideOpen:state.guideOpen, progress:state.progress};
+  const ns = stateFromProject(ex.project, keep);
+  if(!ns){ toast('파일을 읽지 못했습니다.'); return; }
+  if(playing) stop();
+  persist = true; state = ns; state.tab = 'playlist'; state.fileHash = null; currentExample = id;
+  prSel.clear(); seekPos.pat = 0; seekPos.song = 0; closeExamples(); commit();
+  toast(`"${ex.title}" 예제를 불러왔습니다. SONG 모드로 재생해 보세요. 되돌리기(Ctrl+Z)로 이전 작업에 돌아갈 수 있습니다.`);
+}
+function exampleMeta(ex){
+  const en = LANG === 'en', major = ex.scale.type === 'major';
+  return `${ex.bpm} BPM · ${NOTE_NAMES[ex.scale.root]} ${en ? (major ? 'major' : 'minor') : (major ? '메이저' : '마이너')} · ${ex.bars}${en ? ' bars' : '마디'}`;
+}
+function renderExamples(){
+  const list = $('exList'), L = LANG === 'en' ? 'en' : 'ko', exs = exampleList();
+  list.innerHTML = '';
+  if(!exs.length){
+    list.innerHTML = '<div class="ex-card"><p>예제 목록 파일(examples.js)을 읽지 못했습니다. 기본 예제만 쓸 수 있습니다.</p><button id="exBuiltin">불러오기</button></div>';
+    $('exBuiltin').onclick = loadBuiltinDemo; return;
+  }
+  for(const ex of exs){
+    const card = document.createElement('div');
+    card.className = 'ex-card' + (ex.id === currentExample ? ' cur' : '');
+    card.innerHTML = `<div class="ex-genre">${esc(ex.genre[L])}</div><div class="ex-title">${esc(ex.title)}</div>
+      <div class="ex-meta">${esc(exampleMeta(ex))}</div><p>${esc(ex.desc[L])}</p>
+      <div class="ex-tags">${ex.traits[L].map(t=>`<span>${esc(t)}</span>`).join('')}</div>
+      <button>불러오기</button>`;
+    card.querySelector('button').onclick = ()=>loadExample(ex.id);
+    list.appendChild(card);
+  }
+}
+function openExamples(){ $('fileMenu').classList.remove('open'); renderExamples(); $('exModal').classList.add('open'); }
+function closeExamples(){ $('exModal').classList.remove('open'); }
+
 function renderFileState(){
   const b = $('fileState'), dirty = isDirty();
   b.textContent = dirty ? '파일로 저장 안 됨' : '파일 저장됨';
@@ -1012,6 +1098,7 @@ function renderAll(){
   document.querySelector('.layout').classList.toggle('guide-closed', !state.guideOpen);
   $('btnGuide').classList.toggle('on', state.guideOpen);
   renderTransport(); renderFileState();
+  if($('exModal').classList.contains('open')) renderExamples();
   if(state.guideOpen) renderGuide();
   document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on', b.dataset.tab === state.tab));
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on', v.id === 'view-' + state.tab));
@@ -1614,10 +1701,11 @@ const STEPS = [
 function renderGuide(){
   const g = $('guide'), done = STEPS.map(s=>s.check());
   const n = done.filter(Boolean).length;
-  g.innerHTML = `<div class="guide-head"><span class="t">작곡 파이프라인</span><button id="guideClose" title="가이드 닫기">닫기</button></div>
+  g.innerHTML = `<div class="guide-head"><span class="t">작곡 파이프라인</span><button id="guideEx">예제 곡</button><button id="guideClose" title="가이드 닫기">닫기</button></div>
     <div class="hint">단계를 눌러 목표와 원리를 확인하세요. 조건을 채우면 자동으로 완료됩니다.</div>
     <div class="prog"><div style="width:${n/STEPS.length*100}%"></div></div>`;
   $('guideClose').onclick = ()=>setGuide(false);
+  $('guideEx').onclick = openExamples;
   STEPS.forEach((s, i)=>{
     const it = document.createElement('div');
     it.className = 'step-item' + (done[i] ? ' done' : '') + (i === state.guideStep ? ' active' : '');
@@ -1732,13 +1820,9 @@ function init(){
   });
   $('btnUndo').onclick = undo;
   $('btnRedo').onclick = redo;
-  $('fmDemo').onclick = ()=>{
-    if(!confirmDiscard('예제를 불러오면 지금 작업이 바뀝니다.')) return;
-    if(playing) stop();
-    const keep = {tab:state.tab, guideStep:state.guideStep, guideOpen:state.guideOpen, progress:state.progress};
-    persist = true; state = Object.assign(demoState(), keep, {projectName:'예제 - Lofi Loop'}); prSel.clear(); commit();
-    toast('예제를 불러왔습니다. SONG 모드로 재생해 보세요. 되돌리기(Ctrl+Z)로 이전 작업에 돌아갈 수 있습니다.');
-  };
+  $('fmDemo').onclick = openExamples;
+  $('exClose').onclick = closeExamples;
+  $('exModal').onclick = e=>{ if(e.target.id === 'exModal') closeExamples(); };
   document.querySelectorAll('#tabs button').forEach(b=>b.onclick = ()=>setTab(b.dataset.tab));
   document.addEventListener('keydown', e=>{
     if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's'){ e.preventDefault(); document.activeElement.blur(); saveProject(); return; }
@@ -1752,7 +1836,7 @@ function init(){
     if(ctrl && lk === 'y'){ e.preventDefault(); redo(); return; }
     if(ctrl && lk === 's'){ e.preventDefault(); saveProject(); return; }
     if(ctrl && lk === 'o'){ e.preventDefault(); openProjectDialog(); return; }
-    if(e.key === 'Escape') $('fileMenu').classList.remove('open');
+    if(e.key === 'Escape'){ $('fileMenu').classList.remove('open'); closeExamples(); }
     if(e.key === 'Home'){ e.preventDefault(); seek(0, state.mode); return; }
     const fTab = {F5:'playlist', F6:'rack', F7:'roll', F9:'mixer'}[e.key];
     if(fTab && !ctrl){ e.preventDefault(); setTab(fTab); return; }
@@ -1761,7 +1845,13 @@ function init(){
   initRollEvents(); initPlaylistEvents();
   // URL 파라미터: ?demo 는 예제를 저장 없이 보여준다 (README 링크와 스크린샷용)
   const qs = new URLSearchParams(location.search);
-  if(qs.has('demo')){ state = Object.assign(demoState(), {projectName:'예제 - Lofi Loop'}); persist = false; }
+  if(qs.has('demo')){
+    const ex = exampleList().find(e=>e.id === qs.get('demo'));
+    const ns = ex && stateFromProject(ex.project);
+    if(ns){ state = ns; state.tab = 'playlist'; currentExample = ex.id; }
+    else state = Object.assign(demoState(), {projectName:'예제 - Lofi Loop'});
+    persist = false;
+  }
   if(qs.has('noguide')) state.guideOpen = false;
   if(qs.get('tab')) state.tab = qs.get('tab');
   if(qs.get('pat')) state.curPattern = +qs.get('pat');
@@ -1773,7 +1863,8 @@ function init(){
   startI18n();
   renderAll(); requestAnimationFrame(frame);
   if(qs.has('select')){ prSel = new Set(prNotes().slice(0, +qs.get('select') || 4)); drawRoll(); }
-  if(!persist && !qs.has('shot')) toast('예제 보기 모드입니다. 바꾼 내용은 저장되지 않습니다. 저장하려면 "파일 > 예제 프로젝트 불러오기"를 누르세요.');
+  if(qs.has('examples')) openExamples();
+  if(!persist && !qs.has('shot')) toast('예제 보기 모드입니다. 바꾼 내용은 저장되지 않습니다. 저장하려면 "파일 > 예제 곡 고르기"에서 불러오세요.');
 }
 init();
 </script>

@@ -1,0 +1,200 @@
+[
+ {
+  "id": "future-bass",
+  "title": "Future Bass - Daybreak",
+  "file": "future-bass.json",
+  "bpm": 150,
+  "scale": {
+   "root": 0,
+   "type": "major"
+  },
+  "bars": 32,
+  "genre": {
+   "ko": "퓨처 베이스",
+   "en": "Future Bass"
+  },
+  "desc": {
+   "ko": "풍성한 메이저 7·9 코드를 잘게 끊고, 킥 사이드체인으로 코드 전체가 펌핑하는 하프타임 드롭.",
+   "en": "Lush major 7th/9th chords chopped into stabs, with kick sidechain pumping the whole chord in half-time drops."
+  },
+  "traits": {
+   "ko": [
+    "코드 스탭",
+    "사이드체인 펌핑",
+    "하프타임 드롭",
+    "빌드업 스네어 롤"
+   ],
+   "en": [
+    "Chord stabs",
+    "Sidechain pumping",
+    "Half-time drop",
+    "Snare-roll build-up"
+   ]
+  }
+ },
+ {
+  "id": "trap",
+  "title": "Trap - Night Drive",
+  "file": "trap.json",
+  "bpm": 140,
+  "scale": {
+   "root": 9,
+   "type": "minor"
+  },
+  "bars": 32,
+  "genre": {
+   "ko": "트랩",
+   "en": "Trap"
+  },
+  "desc": {
+   "ko": "어두운 마이너 벨 아르페지오 위에, 킥을 따라가는 808과 빠르게 쪼개지는 하이햇.",
+   "en": "Dark minor bell arpeggios over an 808 that follows the kick, with fast-rolling hi-hats."
+  },
+  "traits": {
+   "ko": [
+    "킥을 따라가는 808",
+    "하이햇 롤",
+    "하프타임 스네어",
+    "훅 - 벌스 - 훅"
+   ],
+   "en": [
+    "808 following the kick",
+    "Hi-hat rolls",
+    "Half-time snare",
+    "Hook - verse - hook"
+   ]
+  }
+ },
+ {
+  "id": "house",
+  "title": "House - Sunset Groove",
+  "file": "house.json",
+  "bpm": 124,
+  "scale": {
+   "root": 9,
+   "type": "minor"
+  },
+  "bars": 32,
+  "genre": {
+   "ko": "하우스",
+   "en": "House"
+  },
+  "desc": {
+   "ko": "네 박 모두 킥이 들어가는 four-on-the-floor 위에 엇박 베이스와 마이너 7 코드 스탭.",
+   "en": "Four-on-the-floor kick with an offbeat bass and minor 7th chord stabs."
+  },
+  "traits": {
+   "ko": [
+    "Four-on-the-floor",
+    "엇박 베이스와 하이햇",
+    "브레이크다운 후 드롭",
+    "킥 사이드체인"
+   ],
+   "en": [
+    "Four-on-the-floor",
+    "Offbeat bass and hats",
+    "Breakdown into drop",
+    "Kick sidechain"
+   ]
+  }
+ },
+ {
+  "id": "lofi",
+  "title": "Lo-fi - Rainy Window",
+  "file": "lofi.json",
+  "bpm": 80,
+  "scale": {
+   "root": 0,
+   "type": "major"
+  },
+  "bars": 32,
+  "genre": {
+   "ko": "로파이 힙합",
+   "en": "Lo-fi Hip-hop"
+  },
+  "desc": {
+   "ko": "스윙을 건 붐뱁 드럼과 재즈 코드(ii-V-I-vi). 마스터 필터를 살짝 닫아 먹먹한 질감을 냅니다.",
+   "en": "Swung boom-bap drums with jazz chords (ii-V-I-vi). The master filter stays slightly closed for a muffled tone."
+  },
+  "traits": {
+   "ko": [
+    "스윙 45%",
+    "재즈 7·9·13 코드",
+    "붐뱁 드럼",
+    "필터로 만든 로파이 질감"
+   ],
+   "en": [
+    "45% swing",
+    "Jazz 7th/9th/13th chords",
+    "Boom-bap drums",
+    "Lo-fi tone via filter"
+   ]
+  }
+ },
+ {
+  "id": "synthwave",
+  "title": "Synthwave - Neon Highway",
+  "file": "synthwave.json",
+  "bpm": 108,
+  "scale": {
+   "root": 9,
+   "type": "minor"
+  },
+  "bars": 32,
+  "genre": {
+   "ko": "신스웨이브",
+   "en": "Synthwave"
+  },
+  "desc": {
+   "ko": "8분음표로 달리는 베이스, 16분 아르페지오, 크게 울리는 2·4박 스네어의 80년대풍 사운드.",
+   "en": "An 80s-style sound with a driving 8th-note bass, 16th-note arpeggios and a big snare on 2 and 4."
+  },
+  "traits": {
+   "ko": [
+    "8분 드라이브 베이스",
+    "16분 아르페지오",
+    "Am-F-C-G 진행",
+    "벌스 - 코러스 - 브릿지"
+   ],
+   "en": [
+    "8th-note driving bass",
+    "16th-note arpeggio",
+    "Am-F-C-G progression",
+    "Verse - chorus - bridge"
+   ]
+  }
+ },
+ {
+  "id": "dnb",
+  "title": "Drum & Bass - Liquid Sky",
+  "file": "dnb.json",
+  "bpm": 174,
+  "scale": {
+   "root": 4,
+   "type": "minor"
+  },
+  "bars": 32,
+  "genre": {
+   "ko": "드럼 앤 베이스",
+   "en": "Drum & Bass"
+  },
+  "desc": {
+   "ko": "174 BPM 투스텝 브레이크비트 위에 길게 이어지는 리스 베이스와 몽환적인 리퀴드 패드.",
+   "en": "A 174 BPM two-step breakbeat under a long reese bass and dreamy liquid pads."
+  },
+  "traits": {
+   "ko": [
+    "174 BPM",
+    "투스텝 브레이크비트",
+    "리스 베이스",
+    "8마디 패턴"
+   ],
+   "en": [
+    "174 BPM",
+    "Two-step breakbeat",
+    "Reese bass",
+    "8-bar patterns"
+   ]
+  }
+ }
+]

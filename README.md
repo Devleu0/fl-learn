@@ -104,17 +104,24 @@ FL Studio의 구조(채널 랙, 패턴, 피아노 롤, 플레이리스트, 믹�
 
 ![가이드를 닫은 플레이리스트](docs/images/playlist-wide.png)
 
-### 예제 곡: Future Bass - Daybreak
-[examples/future-bass.json](examples/future-bass.json)을 받아 "파일 > 프로젝트 열기"로 열거나 창에 끌어다 놓고, SONG 모드로 재생합니다.
+### 장르별 예제 곡
 
-| 항목 | 내용 |
-|---|---|
-| 템포 / 키 | 150 BPM, C 메이저 (A 마이너), 드롭은 하프타임 (킥 1박, 스네어 3박) |
-| 코드 | Fmaj9 - G6/9 - Em7 - Am9 |
-| 구성 (32마디, 약 53초) | 인트로 (필터가 열림) - 벌스 - 빌드업 (스네어 롤) - 드롭 1 - 브레이크 - 빌드업 2 - 드롭 2 |
-| 장르 특징 | 잘게 끊긴 코드 스탭, 킥 사이드체인 펌핑 (코드와 808), 옥타브로 튕기는 808, 보컬 찹 느낌의 짧은 리드, 하이햇 롤 |
+주요 장르마다 완성된 곡을 하나씩 넣었습니다. **"파일 > 예제 곡 고르기"** 또는 가이드 위쪽 **"예제 곡"** 버튼으로 고르면 바로 열립니다. 재생해 보고, 패턴과 편곡을 바꿔 보며 장르의 특징을 익혀 보세요.
 
-곡은 [examples/future_bass.py](examples/future_bass.py)가 만든 것입니다. 코드, 리듬, 편곡을 고쳐 `python examples/future_bass.py 새파일.json`으로 다시 만들 수 있습니다.
+![예제 곡 고르기](docs/images/examples.png)
+
+| 장르 | 곡 (누르면 보기 모드로 열림) | BPM | 키 | 특징 | 프로젝트 파일 |
+|---|---|---|---|---|---|
+| 퓨처 베이스 | [Future Bass - Daybreak](https://devleu0.github.io/fl-learn/web/?demo=future-bass) | 150 | C 메이저 | 코드 스탭, 사이드체인 펌핑, 하프타임 드롭, 빌드업 스네어 롤 | [future-bass.json](examples/future-bass.json) |
+| 트랩 | [Trap - Night Drive](https://devleu0.github.io/fl-learn/web/?demo=trap) | 140 | A 마이너 | 킥을 따라가는 808, 하이햇 롤, 하프타임 스네어, 훅 - 벌스 - 훅 | [trap.json](examples/trap.json) |
+| 하우스 | [House - Sunset Groove](https://devleu0.github.io/fl-learn/web/?demo=house) | 124 | A 마이너 | Four-on-the-floor, 엇박 베이스와 하이햇, 브레이크다운 후 드롭, 킥 사이드체인 | [house.json](examples/house.json) |
+| 로파이 힙합 | [Lo-fi - Rainy Window](https://devleu0.github.io/fl-learn/web/?demo=lofi) | 80 | C 메이저 | 스윙 45%, 재즈 7·9·13 코드, 붐뱁 드럼, 필터로 만든 로파이 질감 | [lofi.json](examples/lofi.json) |
+| 신스웨이브 | [Synthwave - Neon Highway](https://devleu0.github.io/fl-learn/web/?demo=synthwave) | 108 | A 마이너 | 8분 드라이브 베이스, 16분 아르페지오, Am-F-C-G 진행, 벌스 - 코러스 - 브릿지 | [synthwave.json](examples/synthwave.json) |
+| 드럼 앤 베이스 | [Drum & Bass - Liquid Sky](https://devleu0.github.io/fl-learn/web/?demo=dnb) | 174 | E 마이너 | 174 BPM, 투스텝 브레이크비트, 리스 베이스, 8마디 패턴 | [dnb.json](examples/dnb.json) |
+
+- 각 곡은 32마디이고, 인트로부터 드롭(또는 후렴)까지 장르의 전형적인 구성을 따릅니다.
+- 링크의 `?demo=장르` 주소는 저장되지 않는 보기 모드로 엽니다. 이어서 작업하려면 앱 안에서 "예제 곡 고르기"로 불러오세요.
+- 모든 예제는 [examples/build_examples.py](examples/build_examples.py)가 만듭니다. 곡을 고치거나 장르를 더하려면 이 파일의 `SONGS`에 함수를 추가하고 `python examples/build_examples.py`를 실행하세요. `examples/*.json`, `examples/index.json`, `web/examples.js`가 함께 갱신됩니다.
 
 ### 일부러 뺀 기능
 샘플 불러오기, 외부 플러그인과 이펙트 슬롯, 오디오 녹음, Slide 같은 FL 전용 노트 속성, 자동화 대상 선택, Performance Mode 등. 파이프라인 경험에 꼭 필요하지 않은 기능은 넣지 않았습니다. 이유는 [학습 도구 설계 문서](FL_Studio_학습도구_설계.md) 3장에 있습니다.
@@ -155,9 +162,10 @@ FL Studio의 구조(채널 랙, 패턴, 피아노 롤, 플레이리스트, 믹�
 ├── README.en.md                    # English
 ├── LICENSE                         # MIT
 ├── index.html                      # web/ 으로 이동하는 시작 페이지
-├── web/index.html                  # 학습 도구 (파일 하나)
+├── web/index.html                  # 학습 도구
+├── web/examples.js                 # 앱이 읽는 예제 목록 (생성기가 만듦)
 ├── docs/images/                    # README 스크린샷
-├── examples/                       # 예제 곡 (프로젝트 JSON과 생성 스크립트)
+├── examples/                       # 장르별 예제 곡 (프로젝트 JSON, 목록, 생성기)
 ├── FL_Studio_주요시스템분석.md
 ├── FL_Studio_작곡파이프라인_활용분석.md
 ├── FL_Studio_스크립팅_LLM연동.md
