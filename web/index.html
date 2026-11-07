@@ -36,6 +36,21 @@ label{color:var(--dim);display:inline-flex;align-items:center;gap:6px}
   aside#guide{width:auto;max-height:38vh;border-right:none;border-bottom:1px solid var(--line)}
 }
 aside#guide{width:300px;flex:none;overflow:auto;background:var(--panel);border-right:1px solid var(--line);padding:12px}
+.layout.guide-closed aside#guide{display:none}
+.guide-head{display:flex;align-items:center;gap:8px}
+.guide-head .t{flex:1;font-weight:600}
+.guide-head button{padding:2px 8px;font-size:12px}
+.menu-wrap{position:relative}
+.menu{position:absolute;right:0;top:calc(100% + 6px);z-index:20;width:280px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px;display:none;box-shadow:0 8px 24px #0008}
+.menu.open{display:block}
+.menu button{display:flex;justify-content:space-between;width:100%;text-align:left;margin:2px 0;background:transparent;border-color:transparent}
+.menu button:hover{background:var(--panel2);border-color:var(--line)}
+.menu kbd{color:var(--dim);font:11px inherit}
+.menu .sep{border-top:1px solid var(--line);margin:6px 0}
+.menu .cap{font-size:11px;color:var(--dim);margin:4px 4px 2px}
+.menu input[type=text]{width:100%;margin:2px 0 4px}
+#dropHint{position:fixed;inset:0;background:#000a;border:3px dashed var(--accent);display:none;place-items:center;font-size:18px;z-index:30;pointer-events:none}
+#dropHint.show{display:grid}
 main{flex:1;min-width:0;display:flex;flex-direction:column}
 .tabs{display:flex;gap:2px;padding:8px 12px 0;border-bottom:1px solid var(--line)}
 .tabs button{border-radius:4px 4px 0 0;border-bottom:none;padding:6px 16px}
@@ -123,10 +138,28 @@ canvas{display:block}
   <div class="group">
     <button id="btnUndo" title="Ctrl+Z">되돌리기</button>
     <button id="btnRedo" title="Ctrl+Y">다시 실행</button>
-    <button id="btnDemo" title="완성된 예제 프로젝트로 바꿉니다">예제 불러오기</button>
-    <button id="btnExport">WAV 내보내기</button>
-    <button id="btnReset">초기화</button>
+    <span id="fileState" class="badge"></span>
+    <div class="menu-wrap">
+      <button id="btnFile" title="프로젝트 저장, 열기, 내보내기">파일</button>
+      <div class="menu" id="fileMenu">
+        <div class="cap">프로젝트 이름</div>
+        <input id="projName" type="text" maxlength="60">
+        <button id="fmNew">새 프로젝트</button>
+        <button id="fmOpen">프로젝트 열기 <kbd>Ctrl+O</kbd></button>
+        <button id="fmSave">프로젝트 저장 <kbd>Ctrl+S</kbd></button>
+        <button id="fmDemo">예제 프로젝트 불러오기</button>
+        <div class="sep"></div>
+        <div class="cap">내보내기</div>
+        <button id="fmWav">곡을 WAV 오디오로</button>
+        <button id="fmMidSong">곡을 MIDI 파일로 <kbd>FL Studio용</kbd></button>
+        <button id="fmMidPat">현재 패턴을 MIDI 파일로</button>
+        <div class="sep"></div>
+        <div class="cap" id="fileInfo"></div>
+      </div>
+    </div>
+    <button id="btnGuide" title="튜토리얼 가이드 열기/닫기">가이드</button>
   </div>
+  <input id="fileInput" type="file" accept=".json,application/json" hidden>
 </header>
 
 <div class="layout">
@@ -179,6 +212,7 @@ canvas{display:block}
   </main>
 </div>
 <div id="toast"></div>
+<div id="dropHint">프로젝트 파일(.json)을 놓으면 엽니다</div>
 
 <script>
 'use strict';
@@ -213,7 +247,8 @@ function defaultState(){
     tracks: [{vol:0.85}].concat(Array.from({length:N_INSERTS}, ()=>({vol:0.8, pan:0, mute:false, route:0, scSource:0, scDepth:0.7}))),
     automation: {enabled:false, values:Array(SONG_BARS+1).fill(1)},
     scale: {root:9, type:'minor'},
-    progress: {previewed:[], exported:false, mixed:false}
+    progress: {previewed:[], exported:false, mixed:false},
+    projectName: '내 프로젝트', guideOpen: true, fileHash: null
   };
 }
 const ui = { snap:1, lastLen:2, chord:'none', ghost:true };
@@ -255,7 +290,11 @@ function demoState(){
 
 let state = loadState() || defaultState();
 function loadState(){
-  try { const s = localStorage.getItem(STORE_KEY); if(!s) return null; const o = JSON.parse(s); return o && o.version===1 ? o : null; }
+  try {
+    const s = localStorage.getItem(STORE_KEY); if(!s) return null;
+    const o = JSON.parse(s); if(!o || o.version !== 1) return null;
+    return Object.assign(defaultState(), o);   // 예전 저장본에 없는 항목은 기본값으로
+  }
   catch(e){ return null; }
 }
 let saveTimer = null, persist = true;
@@ -505,9 +544,9 @@ async function exportWav(){
   toast('렌더링 중...');
   const buf = await oc.startRendering();
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(encodeWav(buf)); a.download = 'my_song.wav'; a.click();
+  a.href = URL.createObjectURL(encodeWav(buf)); a.download = fileBase() + '.wav'; a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href), 5000);
-  state.progress.exported = true; commit(); toast('my_song.wav 를 저장했습니다.');
+  state.progress.exported = true; commit(); toast(fileBase() + '.wav 를 저장했습니다.');
   return buf;
 }
 function encodeWav(buf){
@@ -521,6 +560,183 @@ function encodeWav(buf){
   let o = 44;
   for(let i=0;i<len;i++) for(let c=0;c<ch;c++){ const s = Math.max(-1, Math.min(1, data[c][i])); dv.setInt16(o, s<0 ? s*0x8000 : s*0x7fff, true); o += 2; }
   return new Blob([dv], {type:'audio/wav'});
+}
+
+/* ============================================================
+   프로젝트 파일: 저장 / 열기 / 새 프로젝트, MIDI 내보내기
+   ============================================================ */
+const PROJECT_FORMAT = 'pattern-lab-project';
+const INSTS = ['kick','snare','clap','hat','bass','keys','lead'];
+function hashStr(str){ let h = 5381; for(let i=0;i<str.length;i++) h = (h*33 ^ str.charCodeAt(i)) >>> 0; return h.toString(36); }
+const songHash = () => hashStr(snapOf());
+function fileBase(){ return (state.projectName || '내 프로젝트').replace(/[\\/:*?"<>|]+/g, '_').trim() || 'project'; }
+function download(blob, name){
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 5000);
+}
+function projectData(){
+  const song = {}; for(const k of SNAP_KEYS) song[k] = state[k];
+  return {format:PROJECT_FORMAT, version:1, app:'패턴 작곡 실습실', savedAt:new Date().toISOString(),
+          name:state.projectName, song, view:{curPattern:state.curPattern, curChannel:state.curChannel, mode:state.mode}};
+}
+function saveProject(){
+  download(new Blob([JSON.stringify(projectData(), null, 1)], {type:'application/json'}), fileBase() + '.json');
+  state.fileHash = songHash(); state.lastFileSave = new Date().toLocaleString(); save(); renderFileState();
+  toast(`"${fileBase()}.json" 파일로 저장했습니다. 나중에 "프로젝트 열기"로 이어서 작업할 수 있습니다.`);
+}
+// 파일 내용을 검사하고 빠진 값은 기본값으로 채운다. 근본적인 문제가 있으면 오류 문장을 돌려준다
+function sanitizeSong(song){
+  const d = defaultState(), num = (v, lo, hi, def)=>{ v = Number(v); return Number.isFinite(v) ? Math.max(lo, Math.min(hi, v)) : def; };
+  if(!song || typeof song !== 'object') return '곡 데이터가 없습니다';
+  if(!Array.isArray(song.channels) || !song.channels.length) return '채널 정보가 없습니다';
+  if(!Array.isArray(song.patterns) || !song.patterns.length) return '패턴 정보가 없습니다';
+  const channels = [];
+  for(const c of song.channels){
+    if(!c || !INSTS.includes(c.inst)) return '알 수 없는 악기 종류가 있습니다';
+    channels.push({id:num(c.id,0,999,channels.length), name:String(c.name || c.inst).slice(0,30), inst:c.inst, color:/^#[0-9a-f]{6}$/i.test(c.color) ? c.color : '#888888',
+                   insert:num(c.insert,1,N_INSERTS,1), vol:num(c.vol,0,1,0.8), mute:!!c.mute});
+  }
+  const ids = new Set(channels.map(c=>c.id));
+  const patterns = song.patterns.map((p,i)=>{
+    const notes = {};
+    for(const k in (p.notes || {})){
+      if(!ids.has(+k) || !Array.isArray(p.notes[k])) continue;
+      notes[k] = p.notes[k].map(n=>({pos:num(n.pos,0,MAX_PAT_BARS*SPB-1,0), len:num(n.len,1,MAX_PAT_BARS*SPB,1), key:num(n.key,KEY_LO,KEY_HI,60), vel:num(n.vel,0.05,1,0.8)}));
+    }
+    return {id:num(p.id,1,9999,i+1), name:String(p.name || ('Pattern ' + (i+1))).slice(0,40), color:/^#[0-9a-f]{6}$/i.test(p.color) ? p.color : PAT_COLORS[i % PAT_COLORS.length], minBars:num(p.minBars,1,MAX_PAT_BARS,1), notes};
+  });
+  const pids = new Set(patterns.map(p=>p.id));
+  const clips = (Array.isArray(song.clips) ? song.clips : []).filter(c=>c && pids.has(c.patternId)).map((c,i)=>{
+    const start = num(c.start,0,SONG_BARS-1,0);
+    return {id:num(c.id,1,99999,i+1), patternId:c.patternId, track:num(c.track,0,PL_TRACKS-1,0), start, len:num(c.len,1,SONG_BARS-start,1)};
+  });
+  const tracks = d.tracks.map((t,i)=>{
+    const src = (Array.isArray(song.tracks) && song.tracks[i]) || {};
+    if(i === 0) return {vol:num(src.vol,0,1,t.vol)};
+    return {vol:num(src.vol,0,1,t.vol), pan:num(src.pan,-1,1,0), mute:!!src.mute, route:num(src.route,0,N_INSERTS,0), scSource:num(src.scSource,0,N_INSERTS,0), scDepth:num(src.scDepth,0,1,0.7)};
+  });
+  for(let i=1;i<=N_INSERTS;i++) if(tracks[i].route === i) tracks[i].route = 0;
+  const av = (song.automation && Array.isArray(song.automation.values)) ? song.automation.values : [];
+  return {
+    bpm:num(song.bpm,60,200,120), swing:num(song.swing,0,1,0), channels, patterns, clips, tracks,
+    nextPatternId:Math.max(num(song.nextPatternId,1,99999,1), ...patterns.map(p=>p.id+1)),
+    nextClipId:Math.max(num(song.nextClipId,1,99999,1), ...clips.map(c=>c.id+1), 1),
+    automation:{enabled:!!(song.automation && song.automation.enabled), values:d.automation.values.map((v,i)=>num(av[i],0,1,1))},
+    scale:{root:num(song.scale && song.scale.root,0,11,9), type:(song.scale && song.scale.type === 'major') ? 'major' : 'minor'}
+  };
+}
+function openProjectText(text, fileName){
+  let o;
+  try { o = JSON.parse(text); } catch(e){ toast('JSON 형식이 아니어서 열 수 없습니다.'); return false; }
+  if(!o || o.format !== PROJECT_FORMAT){ toast('패턴 작곡 실습실의 프로젝트 파일이 아닙니다.'); return false; }
+  const song = sanitizeSong(o.song);
+  if(typeof song === 'string'){ toast('파일을 열 수 없습니다: ' + song); return false; }
+  if(playing) stop();
+  const keep = {tab:state.tab, guideStep:state.guideStep, guideOpen:state.guideOpen, progress:state.progress};
+  state = Object.assign(defaultState(), song, keep);
+  state.projectName = String(o.name || (fileName || '').replace(/\.json$/i, '') || '내 프로젝트').slice(0,60);
+  const v = o.view || {};
+  if(pat(v.curPattern)) state.curPattern = v.curPattern; else state.curPattern = state.patterns[0].id;
+  if(chan(v.curChannel)) state.curChannel = v.curChannel; else state.curChannel = state.channels[0].id;
+  if(v.mode === 'song' || v.mode === 'pat') state.mode = v.mode;
+  persist = true; prSel.clear(); seekPos.pat = 0; seekPos.song = 0;
+  state.fileHash = songHash(); state.lastFileSave = '열기: ' + new Date().toLocaleString();
+  commit();
+  toast(`"${state.projectName}"을 열었습니다. 패턴 ${state.patterns.length}개, 클립 ${state.clips.length}개.`);
+  return true;
+}
+function isDirty(){ return state.fileHash !== songHash(); }
+function confirmDiscard(what){
+  return !isDirty() || confirm(`파일로 저장하지 않은 변경 내용이 있습니다. ${what} 계속할까요?\n(브라우저에는 자동 저장되어 있지만, 바뀐 프로젝트로 덮어써집니다.)`);
+}
+function openProjectDialog(){ if(confirmDiscard('다른 프로젝트를 열면 지금 작업이 바뀝니다.')) $('fileInput').click(); }
+function readProjectFile(file){
+  if(!file) return;
+  if(!/\.json$/i.test(file.name) && file.type !== 'application/json'){ toast('프로젝트 파일(.json)만 열 수 있습니다.'); return; }
+  const r = new FileReader();
+  r.onload = ()=>openProjectText(String(r.result), file.name);
+  r.onerror = ()=>toast('파일을 읽지 못했습니다.');
+  r.readAsText(file);
+}
+function newProject(){
+  if(!confirmDiscard('새 프로젝트를 만들면 지금 작업이 지워집니다.')) return;
+  if(playing) stop();
+  const keep = {tab:state.tab, guideStep:state.guideStep, guideOpen:state.guideOpen, progress:state.progress};
+  state = Object.assign(defaultState(), keep); persist = true; prSel.clear(); seekPos.pat = 0; seekPos.song = 0;
+  state.fileHash = songHash(); commit(); toast('새 프로젝트를 만들었습니다. 되돌리기(Ctrl+Z)로 이전 작업을 되살릴 수 있습니다.');
+}
+function renderFileState(){
+  const b = $('fileState'), dirty = isDirty();
+  b.textContent = dirty ? '파일로 저장 안 됨' : '파일 저장됨';
+  b.classList.toggle('warn', dirty);
+  b.title = dirty ? '브라우저에는 자동 저장되지만, 다른 기기나 브라우저에서 이어서 작업하려면 "파일 > 프로젝트 저장"을 하세요.' : '';
+  $('fileInfo').textContent = state.lastFileSave ? '마지막 파일 작업: ' + state.lastFileSave : '아직 파일로 저장한 적이 없습니다.';
+  if(document.activeElement !== $('projName')) $('projName').value = state.projectName;
+  document.title = state.projectName + ' - 패턴 작곡 실습실';
+}
+
+/* ---------- MIDI 내보내기 (Standard MIDI File, Type 1) ----------
+   FL Studio에서 열면 채널마다 트랙이 만들어진다. 드럼은 GM 드럼 번호로 10번 채널에 넣는다. */
+const GM_DRUM = {kick:36, snare:38, clap:39, hat:42};
+const GM_PROGRAM = {bass:38, keys:4, lead:81};
+function collectNotes(scope){
+  const out = {}; state.channels.forEach(c=>out[c.id] = []);
+  if(scope === 'pattern'){
+    const p = curPat();
+    for(const k in p.notes) if(out[k]) out[k].push(...p.notes[k].map(n=>({...n})));
+    return out;
+  }
+  for(const clip of state.clips){
+    const p = pat(clip.patternId); if(!p) continue;
+    const L = patLen(p), end = clip.len*SPB;
+    for(let r=0; r*L < end; r++) for(const k in p.notes){
+      if(!out[k]) continue;
+      for(const n of p.notes[k]){ const s0 = r*L + n.pos; if(s0 < end) out[k].push({...n, pos:clip.start*SPB + s0}); }
+    }
+  }
+  return out;
+}
+function vlq(n){ const b = [n & 0x7f]; while((n >>= 7)) b.unshift((n & 0x7f) | 0x80); return b; }
+function midiTrack(events){   // events: [{t, d:[bytes], o}] o: 같은 시각일 때 정렬 순서
+  events.sort((a,b)=>a.t - b.t || a.o - b.o);
+  const bytes = []; let last = 0;
+  for(const e of events){ bytes.push(...vlq(e.t - last), ...e.d); last = e.t; }
+  bytes.push(0x00, 0xff, 0x2f, 0x00);
+  return [0x4d,0x54,0x72,0x6b, (bytes.length>>>24)&255, (bytes.length>>>16)&255, (bytes.length>>>8)&255, bytes.length&255, ...bytes];
+}
+const textMeta = (type, str)=>{ const b = Array.from(new TextEncoder().encode(str)); return [0xff, type, ...vlq(b.length), ...b]; };
+function buildMidi(scope){
+  const PPQ = 96, TPS = PPQ/4, notes = collectNotes(scope);
+  const usp = Math.round(60000000/state.bpm);
+  const tracks = [midiTrack([
+    {t:0, o:0, d:textMeta(0x03, state.projectName)},
+    {t:0, o:0, d:[0xff,0x51,0x03,(usp>>16)&255,(usp>>8)&255,usp&255]},
+    {t:0, o:0, d:[0xff,0x58,0x04,4,2,24,8]}
+  ])];
+  let melodicCh = 0, count = 0;
+  for(const c of state.channels){
+    const list = notes[c.id]; if(!list.length) continue;
+    const drum = isDrum(c), ch = drum ? 9 : (melodicCh++ % 9);
+    const ev = [{t:0, o:0, d:textMeta(0x03, c.name)}];
+    if(!drum) ev.push({t:0, o:0, d:[0xc0|ch, GM_PROGRAM[c.inst] || 0]});
+    for(const n of list){
+      const key = drum ? GM_DRUM[c.inst] : n.key, vel = Math.max(1, Math.round(n.vel*127));
+      const on = n.pos*TPS, off = (n.pos + (drum ? 1 : n.len))*TPS;
+      ev.push({t:on, o:2, d:[0x90|ch, key, vel]}, {t:off, o:1, d:[0x80|ch, key, 64]});
+      count++;
+    }
+    tracks.push(midiTrack(ev));
+  }
+  const head = [0x4d,0x54,0x68,0x64, 0,0,0,6, 0,1, 0,tracks.length, (PPQ>>8)&255, PPQ&255];
+  return {bytes:new Uint8Array([...head, ...tracks.flat()]), tracks:tracks.length - 1, notes:count};
+}
+function exportMidi(scope){
+  if(scope === 'song' && !state.clips.length){ toast('플레이리스트에 클립이 없습니다. 패턴만 내보내려면 "현재 패턴을 MIDI 파일로"를 쓰세요.'); return; }
+  const m = buildMidi(scope);
+  if(!m.notes){ toast('내보낼 노트가 없습니다.'); return; }
+  const name = fileBase() + (scope === 'pattern' ? ' - ' + curPat().name.replace(/[\\/:*?"<>|]+/g, '_') : '') + '.mid';
+  download(new Blob([m.bytes], {type:'audio/midi'}), name);
+  toast(`${name} 저장: 트랙 ${m.tracks}개, 노트 ${m.notes}개. 스윙, 믹서, 자동화는 MIDI에 담기지 않습니다.`);
 }
 
 /* ============================================================
@@ -583,8 +799,12 @@ function restoreSnap(s){
 }
 function undo(){ if(!undoStack.length){ toast('되돌릴 작업이 없습니다.'); return; } redoStack.push(lastSnap); restoreSnap(undoStack.pop()); }
 function redo(){ if(!redoStack.length){ toast('다시 실행할 작업이 없습니다.'); return; } undoStack.push(lastSnap); restoreSnap(redoStack.pop()); }
+function setGuide(open){ state.guideOpen = open; save(); renderAll(); }
 function renderAll(){
-  renderTransport(); renderGuide();
+  document.querySelector('.layout').classList.toggle('guide-closed', !state.guideOpen);
+  $('btnGuide').classList.toggle('on', state.guideOpen);
+  renderTransport(); renderFileState();
+  if(state.guideOpen) renderGuide();
   document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on', b.dataset.tab === state.tab));
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on', v.id === 'view-' + state.tab));
   ({rack:renderRack, roll:renderRoll, playlist:renderPlaylist, mixer:renderMixer})[state.tab]();
@@ -1179,9 +1399,10 @@ const STEPS = [
 function renderGuide(){
   const g = $('guide'), done = STEPS.map(s=>s.check());
   const n = done.filter(Boolean).length;
-  g.innerHTML = `<div style="font-weight:600">작곡 파이프라인</div>
+  g.innerHTML = `<div class="guide-head"><span class="t">작곡 파이프라인</span><button id="guideClose" title="가이드 닫기">닫기</button></div>
     <div class="hint">단계를 눌러 목표와 원리를 확인하세요. 조건을 채우면 자동으로 완료됩니다.</div>
     <div class="prog"><div style="width:${n/STEPS.length*100}%"></div></div>`;
+  $('guideClose').onclick = ()=>setGuide(false);
   STEPS.forEach((s, i)=>{
     const it = document.createElement('div');
     it.className = 'step-item' + (done[i] ? ' done' : '') + (i === state.guideStep ? ' active' : '');
@@ -1256,19 +1477,42 @@ function init(){
     state.patterns = state.patterns.filter(x=>x !== p); state.clips = state.clips.filter(c=>c.patternId !== p.id);
     state.curPattern = state.patterns[0].id; commit();
   };
-  $('btnExport').onclick = exportWav;
+  const menu = $('fileMenu'), closeMenu = ()=>menu.classList.remove('open');
+  $('btnFile').onclick = e=>{ e.stopPropagation(); menu.classList.toggle('open'); renderFileState(); };
+  menu.onclick = e=>{ if(e.target.closest('button')) closeMenu(); e.stopPropagation(); };
+  document.addEventListener('click', closeMenu);
+  $('projName').onchange = e=>{ state.projectName = e.target.value.trim().slice(0,60) || '내 프로젝트'; save(); renderFileState(); };
+  $('fmNew').onclick = newProject;
+  $('fmOpen').onclick = openProjectDialog;
+  $('fmSave').onclick = saveProject;
+  $('fmWav').onclick = exportWav;
+  $('fmMidSong').onclick = ()=>exportMidi('song');
+  $('fmMidPat').onclick = ()=>exportMidi('pattern');
+  $('fileInput').onchange = e=>{ readProjectFile(e.target.files[0]); e.target.value = ''; };
+  $('btnGuide').onclick = ()=>setGuide(!state.guideOpen);
+  // 프로젝트 파일을 창에 끌어다 놓아 열기
+  let dragDepth = 0;
+  const hasFile = e=>e.dataTransfer && [...e.dataTransfer.types].includes('Files');
+  window.addEventListener('dragenter', e=>{ if(hasFile(e)){ dragDepth++; $('dropHint').classList.add('show'); } });
+  window.addEventListener('dragleave', e=>{ if(hasFile(e) && --dragDepth <= 0){ dragDepth = 0; $('dropHint').classList.remove('show'); } });
+  window.addEventListener('dragover', e=>{ if(hasFile(e)) e.preventDefault(); });
+  window.addEventListener('drop', e=>{
+    if(!hasFile(e)) return;
+    e.preventDefault(); dragDepth = 0; $('dropHint').classList.remove('show');
+    if(confirmDiscard('다른 프로젝트를 열면 지금 작업이 바뀝니다.')) readProjectFile(e.dataTransfer.files[0]);
+  });
   $('btnUndo').onclick = undo;
   $('btnRedo').onclick = redo;
-  $('btnDemo').onclick = ()=>{
-    if(!confirm('지금 작업을 예제 프로젝트로 바꿀까요? 되돌리기(Ctrl+Z)로 돌아올 수 있습니다.')) return;
-    if(playing) stop(); persist = true; state = demoState(); prSel.clear(); commit(); toast('예제를 불러왔습니다. SONG 모드로 재생해 보세요.');
-  };
-  $('btnReset').onclick = ()=>{
-    if(!confirm('모든 작업을 지우고 처음 상태로 돌아갈까요?')) return;
-    if(playing) stop(); state = defaultState(); commit();
+  $('fmDemo').onclick = ()=>{
+    if(!confirmDiscard('예제를 불러오면 지금 작업이 바뀝니다.')) return;
+    if(playing) stop();
+    const keep = {tab:state.tab, guideStep:state.guideStep, guideOpen:state.guideOpen, progress:state.progress};
+    persist = true; state = Object.assign(demoState(), keep, {projectName:'예제 - Lofi Loop'}); prSel.clear(); commit();
+    toast('예제를 불러왔습니다. SONG 모드로 재생해 보세요. 되돌리기(Ctrl+Z)로 이전 작업에 돌아갈 수 있습니다.');
   };
   document.querySelectorAll('#tabs button').forEach(b=>b.onclick = ()=>setTab(b.dataset.tab));
   document.addEventListener('keydown', e=>{
+    if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's'){ e.preventDefault(); document.activeElement.blur(); saveProject(); return; }
     if(/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) return;
     const ctrl = e.ctrlKey || e.metaKey, lk = e.key.toLowerCase();
     if(e.code === 'Space'){
@@ -1277,13 +1521,17 @@ function init(){
     }
     if(ctrl && lk === 'z'){ e.preventDefault(); e.shiftKey ? redo() : undo(); return; }
     if(ctrl && lk === 'y'){ e.preventDefault(); redo(); return; }
+    if(ctrl && lk === 's'){ e.preventDefault(); saveProject(); return; }
+    if(ctrl && lk === 'o'){ e.preventDefault(); openProjectDialog(); return; }
+    if(e.key === 'Escape') $('fileMenu').classList.remove('open');
     if(e.key === 'Home'){ e.preventDefault(); seek(0, state.mode); return; }
     if(state.tab === 'roll' && prKey(e)) e.preventDefault();
   });
   initRollEvents(); initPlaylistEvents();
   // URL 파라미터: ?demo 는 예제를 저장 없이 보여준다 (README 링크와 스크린샷용)
   const qs = new URLSearchParams(location.search);
-  if(qs.has('demo')){ state = demoState(); persist = false; }
+  if(qs.has('demo')){ state = Object.assign(demoState(), {projectName:'예제 - Lofi Loop'}); persist = false; }
+  if(qs.has('noguide')) state.guideOpen = false;
   if(qs.get('tab')) state.tab = qs.get('tab');
   if(qs.get('pat')) state.curPattern = +qs.get('pat');
   if(qs.get('ch')) state.curChannel = +qs.get('ch');
