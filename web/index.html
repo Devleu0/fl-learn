@@ -101,7 +101,7 @@ canvas{display:block}
 </head>
 <body>
 <header class="top">
-  <div class="brand">패턴 작곡 실습실<small>FL Studio 구조 학습용 미니 DAW</small></div>
+  <div class="brand">패턴 작곡 실습실<small>FL Studio 핵심 기능 학습 튜토리얼</small></div>
   <div class="group">
     <button id="btnPlay" title="Space">재생</button>
     <div class="seg group" id="modeSeg" style="gap:0">
@@ -156,7 +156,7 @@ canvas{display:block}
         <button id="prQuant" title="선택한 노트(없으면 전체)의 시작 위치를 스냅 단위로 맞춤">퀀타이즈</button>
         <span class="badge" id="prSelInfo"></span>
       </div>
-      <div class="hint" style="margin-bottom:2px">마우스: 클릭 추가 · 드래그 이동 · 노트 끝 드래그 길이 · 오른쪽 클릭/드래그 삭제 · Ctrl+드래그 영역 선택 · Shift+클릭 선택 추가 · 아래 영역 세기 · 건반 클릭 미리듣기 · Ctrl+휠 가로 확대</div>
+      <div class="hint" style="margin-bottom:2px">마우스: 클릭 추가 · 드래그 이동 · 노트 끝 드래그 길이 · 오른쪽 클릭/드래그 삭제 · 위 눈금자 클릭 재생 위치 이동 · Ctrl+드래그 영역 선택 · Shift+클릭 선택 추가 · 아래 영역 세기 · 건반 클릭 미리듣기 · Ctrl+휠 가로 확대</div>
       <div class="hint" style="margin-bottom:6px">키보드: 방향키 이동 (Shift+위/아래 옥타브) · Ctrl+A 전체 선택 · Ctrl+C/X/V 복사/잘라내기/붙여넣기 · Ctrl+B 복제 · Delete 삭제 · Q 퀀타이즈 · Esc 선택 해제 · Ctrl+Z/Y 되돌리기/다시 실행</div>
       <div class="scroll" id="prScroll"><canvas id="prCanvas"></canvas><div class="playline" id="prLine"></div></div>
     </section>
@@ -168,7 +168,7 @@ canvas{display:block}
         <button id="plAutoReset">자동화 초기화</button>
         <span class="badge" id="plInfo"></span>
       </div>
-      <div class="hint" style="margin-bottom:6px">빈 칸 클릭: 현재 패턴 배치 · 드래그: 이동 · 클립 오른쪽 끝 드래그: 길이 (패턴보다 길면 반복) · 오른쪽 클릭: 삭제 · 클립 클릭: 그 패턴이 현재 패턴이 됨</div>
+      <div class="hint" style="margin-bottom:6px">눈금자 클릭/드래그: 재생 위치 이동 · 빈 칸 클릭: 현재 패턴 배치 · 드래그: 이동 · 클립 오른쪽 끝 드래그: 길이 (패턴보다 길면 반복) · 오른쪽 클릭: 삭제 · 클립 클릭: 그 패턴이 현재 패턴이 됨</div>
       <div class="scroll" id="plScroll"><canvas id="plCanvas"></canvas><div class="playline" id="plLine"></div></div>
     </section>
 
@@ -424,10 +424,10 @@ function autoValue(barF){
   const a = v[i], b = v[Math.min(SONG_BARS, i+1)];
   return a + (b - a)*f;
 }
-function initAutomation(g, t, mode){
+function initAutomation(g, t, mode, bar=0){
   const f = g.tracks[0].filter.frequency;
   f.cancelScheduledValues(t);
-  f.setValueAtTime(mode==='song' && state.automation.enabled ? autoFreq(autoValue(0)) : 20000, t);
+  f.setValueAtTime(mode==='song' && state.automation.enabled ? autoFreq(autoValue(bar)) : 20000, t);
 }
 function scheduleStep(g, s, t, mode){
   const sd = stepDur();
@@ -450,10 +450,28 @@ function scheduleStep(g, s, t, mode){
 /* ---------- 실시간 스케줄러 ---------- */
 let playing = false, timer = null, nextT = 0, stepIdx = 0, playQueue = [], curStep = -1;
 function loopLen(){ return state.mode === 'pat' ? patLen(curPat()) : songBars()*SPB; }
+// 재생 시작 위치. PAT은 패턴 안의 스텝, SONG은 곡 전체의 스텝
+const seekPos = {pat:0, song:0};
+function seek(step, mode){
+  const restart = playing && state.mode !== mode;
+  if(restart) stop();
+  if(state.mode !== mode){ state.mode = mode; save(); }
+  const L = mode === 'pat' ? patLen(curPat()) : songBars()*SPB;
+  seekPos[mode] = Math.max(0, Math.min(L - 1, Math.floor(step)));
+  if(restart) play();
+  else if(playing){
+    stepIdx = seekPos[mode]; nextT = actx.currentTime + 0.03; playQueue = []; curStep = stepIdx;
+    initAutomation(live, nextT, mode, stepIdx/SPB);
+  }
+  renderTransport();
+  if(state.tab === 'playlist') drawPlaylist();
+  if(state.tab === 'roll') drawRoll();
+}
 function play(){
   ensureCtx(); if(playing) return;
-  playing = true; stepIdx = 0; nextT = actx.currentTime + 0.06; playQueue = [];
-  initAutomation(live, nextT, state.mode);
+  playing = true; nextT = actx.currentTime + 0.06; playQueue = [];
+  stepIdx = Math.max(0, Math.min(loopLen() - 1, seekPos[state.mode]));
+  initAutomation(live, nextT, state.mode, stepIdx/SPB);
   timer = setInterval(tick, 25); tick(); renderTransport();
 }
 function stop(){
@@ -506,7 +524,7 @@ function encodeWav(buf){
 }
 
 /* ============================================================
-   패턴 조작 (역기획서 6.5절)
+   패턴 조작 (시스템 분석 6.5절)
    ============================================================ */
 function newPattern(name, color, minBars, notes){
   const id = state.nextPatternId++;
@@ -589,7 +607,7 @@ function renderTransport(){
 }
 
 /* ============================================================
-   채널 랙 + 스텝 시퀀서 (역기획서 4장)
+   채널 랙 + 스텝 시퀀서 (시스템 분석 4장)
    ============================================================ */
 function renderRack(){
   const v = $('view-rack'), p = curPat(), L = patLen(p);
@@ -656,12 +674,12 @@ function renderRack(){
 const esc = s => String(s).replace(/[&<>"]/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
 
 /* ============================================================
-   피아노 롤 (역기획서 5장)
+   피아노 롤 (시스템 분석 5장)
    - 클릭: 노트 추가 / 드래그: 이동 / 노트 끝 드래그: 길이
    - 오른쪽 클릭·드래그: 삭제 / Ctrl+드래그: 영역 선택 / Shift+클릭: 선택 추가
    - 키보드: 방향키 이동, Ctrl+A/C/X/V/B, Delete, Q(퀀타이즈), Esc
    ============================================================ */
-const PR = {KW:56, RH:14, SW:20, VH:70};
+const PR = {KW:56, RH:14, SW:20, VH:70, TOP:18};
 const ROWS = KEY_HI - KEY_LO + 1;
 const MAX_STEPS = MAX_PAT_BARS*SPB;
 let prDrag = null, prSel = new Set(), prClip = [], prClipSrc = '';
@@ -693,8 +711,18 @@ function drawRoll(){
   prCleanSel();
   const cv = $('prCanvas'), p = curPat(), c = curChan(), L = patLen(p), cols = prCols();
   const W = PR.KW + cols*PR.SW, GH = ROWS*PR.RH, H = GH + 6 + PR.VH, dpr = window.devicePixelRatio || 1;
-  cv.width = W*dpr; cv.height = H*dpr; cv.style.width = W + 'px'; cv.style.height = H + 'px';
+  cv.width = W*dpr; cv.height = (H + PR.TOP)*dpr; cv.style.width = W + 'px'; cv.style.height = (H + PR.TOP) + 'px';
   const g = cv.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0);
+  // 눈금자: 클릭하면 PAT 모드 재생 위치가 바뀐다
+  g.fillStyle = '#181b20'; g.fillRect(0, 0, W, PR.TOP);
+  g.font = '10px sans-serif';
+  for(let i=0;i<cols;i+=4){
+    const x = PR.KW + i*PR.SW;
+    g.fillStyle = i % SPB === 0 ? '#5b6370' : '#353a43'; g.fillRect(x, i % SPB === 0 ? 0 : PR.TOP - 5, 1, i % SPB === 0 ? PR.TOP : 5);
+    if(i % SPB === 0){ g.fillStyle = '#9aa3af'; g.fillText(String(i/SPB + 1), x + 4, 12); }
+  }
+  { const mx = PR.KW + seekPos.pat*PR.SW; g.fillStyle = '#f0a040'; g.beginPath(); g.moveTo(mx - 6, 0); g.lineTo(mx + 6, 0); g.lineTo(mx, 10); g.closePath(); g.fill(); g.fillRect(mx, 0, 1, PR.TOP); }
+  g.translate(0, PR.TOP);
   g.fillStyle = '#20242a'; g.fillRect(0,0,W,H);
   // 줄: 검은 건반 / 스케일 / 근음
   for(let r=0;r<ROWS;r++){
@@ -751,10 +779,11 @@ function drawRoll(){
     const x = PR.KW + n.pos*PR.SW + 3, h = n.vel*(PR.VH - 8);
     g.fillStyle = prSel.has(n) ? '#fff' : c.color; g.fillRect(x, vy + PR.VH - 4 - h, 4, h); g.fillRect(x - 2, vy + PR.VH - 4 - h, 8, 2);
   }
-  $('prLine').style.height = GH + 'px';
+  $('prLine').style.height = GH + 'px'; $('prLine').style.top = PR.TOP + 'px';
   $('prSelInfo').textContent = prSel.size ? `선택 ${prSel.size}개` : `노트 ${prNotes().length}개`;
 }
-function prPos(e){ const r = $('prCanvas').getBoundingClientRect(); return {x:e.clientX - r.left, y:e.clientY - r.top}; }
+function prPos(e){ const r = $('prCanvas').getBoundingClientRect(); return {x:e.clientX - r.left, y:e.clientY - r.top - PR.TOP}; }
+const prSeekAt = x => seek(Math.floor((x - PR.KW)/PR.SW/ui.snap)*ui.snap, 'pat');
 function prHit(x, y){
   const stepF = (x - PR.KW)/PR.SW, key = KEY_HI - Math.floor(y/PR.RH);
   const ns = prNotes();
@@ -824,6 +853,7 @@ function initRollEvents(){
   cv.oncontextmenu = e=>e.preventDefault();
   cv.onmousedown = e=>{
     const {x, y} = prPos(e), c = curChan(), GH = ROWS*PR.RH;
+    if(y < 0){ if(x >= PR.KW){ prDrag = {mode:'seek'}; prSeekAt(x); } return; }
     if(x < PR.KW){ if(y < GH) preview(c, KEY_HI - Math.floor(y/PR.RH)); return; }
     if(y > GH){ prDrag = {mode:'vel'}; prSetVel(x, y); return; }
     const stepF = (x - PR.KW)/PR.SW, key = KEY_HI - Math.floor(y/PR.RH), h = prHit(x, y);
@@ -846,7 +876,7 @@ function initRollEvents(){
   cv.addEventListener('mousemove', e=>{
     if(prDrag) return;
     const {x, y} = prPos(e);
-    if(x < PR.KW){ cv.style.cursor = 'pointer'; return; }
+    if(x < PR.KW || y < 0){ cv.style.cursor = 'pointer'; return; }
     if(y > ROWS*PR.RH){ cv.style.cursor = 'ns-resize'; return; }
     const h = prHit(x, y);
     cv.style.cursor = h ? (h.edge ? 'ew-resize' : 'move') : 'crosshair';
@@ -859,6 +889,7 @@ function initRollEvents(){
     if(!prDrag) return;
     const {x, y} = prPos(e);
     if(prDrag.mode === 'vel'){ prSetVel(x, y); return; }
+    if(prDrag.mode === 'seek'){ prSeekAt(Math.max(PR.KW, x)); return; }
     if(prDrag.mode === 'erase'){ prErase(x, y); return; }
     if(prDrag.mode === 'box'){ prDrag.x1 = x; prDrag.y1 = y; drawRoll(); return; }
     const stepF = (x - PR.KW)/PR.SW, o = prDrag.orig, a = o.find(r=>r.n === prDrag.anchor);
@@ -888,9 +919,9 @@ function initRollEvents(){
         const kHi = KEY_HI - Math.floor(Math.min(d.y0, d.y1)/PR.RH), kLo = KEY_HI - Math.floor(Math.max(d.y0, d.y1)/PR.RH);
         for(const n of prNotes()) if(n.pos < s1 && n.pos + n.len > s0 && n.key <= kHi && n.key >= kLo) prSel.add(n);
         drawRoll();
-      } else commit();
+      } else if(d.mode !== 'seek') commit();
     }
-    if(plDrag){ plDrag = null; commit(); }
+    if(plDrag){ const m = plDrag.mode; plDrag = null; if(m !== 'seek') commit(); }
   });
   $('prChan').onchange = e=>{ state.curChannel = +e.target.value; prSel.clear(); commit(); };
   $('prRoot').onchange = e=>{ state.scale.root = +e.target.value; commit(); };
@@ -904,7 +935,7 @@ function initRollEvents(){
 }
 
 /* ============================================================
-   플레이리스트 (역기획서 7장)
+   플레이리스트 (시스템 분석 7장)
    ============================================================ */
 const PL = {HW:84, BW:36, TH:36, RU:22, AH:80};
 let plDrag = null;
@@ -924,6 +955,8 @@ function drawPlaylist(){
   g.fillStyle = '#181b20'; g.fillRect(0, 0, G.W, PL.RU);
   g.fillStyle = '#9aa3af'; g.font = '10px sans-serif';
   for(let b=0;b<SONG_BARS;b++) g.fillText(String(b+1), PL.HW + b*PL.BW + 4, 15);
+  g.fillText('재생 위치', 10, 15);
+  { const mx = PL.HW + seekPos.song/SPB*PL.BW; g.fillStyle = '#f0a040'; g.beginPath(); g.moveTo(mx - 6, 0); g.lineTo(mx + 6, 0); g.lineTo(mx, 11); g.closePath(); g.fill(); g.fillRect(mx, 0, 1, PL.RU); }
   // 트랙
   for(let t=0;t<PL_TRACKS;t++){
     const y = PL.RU + t*PL.TH;
@@ -972,12 +1005,15 @@ function plSetAuto(x, y){
   state.automation.values[i] = Math.max(0, Math.min(1, 1 - (y - G.autoTop - 4)/(PL.AH - 8)));
   drawPlaylist();
 }
+// 눈금자 클릭: SONG 모드 재생 위치를 박자 단위로 옮긴다
+const plSeekAt = x => seek(Math.floor(Math.max(0, x - PL.HW)/PL.BW*SPB/4)*4, 'song');
 function initPlaylistEvents(){
   const cv = $('plCanvas');
   cv.oncontextmenu = e=>e.preventDefault();
   cv.onmousedown = e=>{
     const {x, y} = plPos(e), G = plGeom();
-    if(x < PL.HW || y < PL.RU) return;
+    if(x < PL.HW) return;
+    if(y < PL.RU){ plDrag = {mode:'seek'}; plSeekAt(x); return; }
     if(y >= G.autoTop){ if(state.automation.enabled){ plDrag = {mode:'auto'}; plSetAuto(x, y); } return; }
     const track = Math.floor((y - PL.RU)/PL.TH); if(track >= PL_TRACKS) return;
     const barF = (x - PL.HW)/PL.BW, bar = Math.floor(barF);
@@ -999,6 +1035,7 @@ function initPlaylistEvents(){
     if(!plDrag) return;
     const {x, y} = plPos(e);
     if(plDrag.mode === 'auto'){ plSetAuto(x, y); return; }
+    if(plDrag.mode === 'seek'){ plSeekAt(x); return; }
     const c = plDrag.clip, barF = (x - PL.HW)/PL.BW;
     if(plDrag.mode === 'resize') c.len = Math.max(1, Math.min(SONG_BARS - c.start, Math.ceil(barF - c.start)));
     else {
@@ -1017,7 +1054,7 @@ function initPlaylistEvents(){
 }
 
 /* ============================================================
-   믹서 (역기획서 8장)
+   믹서 (시스템 분석 8장)
    ============================================================ */
 function routeReaches(from, target){   // from에서 출력을 따라가다 target을 만나는가
   let cur = from, guard = 0;
@@ -1096,47 +1133,47 @@ const STEPS = [
   {title:'사운드 고르기', tab:'rack',
    goal:'곡에 쓸 소리들을 들어 보고 각각의 성격을 파악한다.',
    todo:['채널 랙에서 채널 이름을 눌러 소리를 들어 본다 (3개 이상)', '각 채널의 "믹서 n"이 어느 믹서 트랙으로 가는지 확인한다'],
-   why:'FL Studio는 소리(채널)와 노트(패턴)를 분리한다. 채널은 "무엇이 소리 나는가"만 맡는다. 그래서 노트를 건드리지 않고 소리만 바꿀 수 있다. (역기획서 2.3절, 4장)',
+   why:'FL Studio는 소리(채널)와 노트(패턴)를 분리한다. 채널은 "무엇이 소리 나는가"만 맡는다. 그래서 노트를 건드리지 않고 소리만 바꿀 수 있다. (시스템 분석 2.3절, 4장)',
    check:()=>state.progress.previewed.length >= 3},
   {title:'리듬 만들기', tab:'rack',
    goal:'킥과 스네어(또는 클랩)로 기본 그루브를 만든다.',
    todo:['상단 PAT 모드에서 재생한다', 'Kick 4개 이상, Snare나 Clap 2개 이상 찍는다', 'Hat을 촘촘히 찍고 스윙을 올려 본다'],
-   why:'스텝 버튼 하나는 노트 하나다. 스텝 시퀀서는 피아노 롤 노트를 다르게 보여주는 화면일 뿐이다. Kick을 더블클릭해 피아노 롤에서 열면 같은 노트가 보인다. (역기획서 4.4절)',
+   why:'스텝 버튼 하나는 노트 하나다. 스텝 시퀀서는 피아노 롤 노트를 다르게 보여주는 화면일 뿐이다. Kick을 더블클릭해 피아노 롤에서 열면 같은 노트가 보인다. (시스템 분석 4.4절)',
    check:()=>countNotes('kick') >= 4 && countNotes('snare') + countNotes('clap') >= 2},
   {title:'코드 진행', tab:'roll', chan:'keys',
    goal:'Keys 채널로 코드 2개 이상을 만든다.',
    todo:['피아노 롤의 채널을 Keys로 고른다', '키와 스케일을 정하면 스케일 음이 밝게 표시된다', '코드 스탬프를 "스케일 3화음"으로 두고, 마디마다 근음 자리를 클릭한다', '노트 오른쪽 끝을 끌어 1마디 길이로 늘린다'],
-   why:'노트는 (패턴, 채널) 쌍에 속한다. 지금 편집하는 것은 "현재 패턴의 Keys 칸"이다. 코드 스탬프는 노트 여러 개를 한 번에 만들어 줄 뿐이라, 만든 뒤 하나씩 고칠 수 있다. (역기획서 5장, 6.3절)',
+   why:'노트는 (패턴, 채널) 쌍에 속한다. 지금 편집하는 것은 "현재 패턴의 Keys 칸"이다. 코드 스탬프는 노트 여러 개를 한 번에 만들어 줄 뿐이라, 만든 뒤 하나씩 고칠 수 있다. (시스템 분석 5장, 6.3절)',
    check:()=>chordCount() >= 2},
   {title:'베이스', tab:'roll', chan:'bass',
    goal:'킥과 맞물리는 베이스 라인을 만든다.',
    todo:['채널을 808 Bass로 고른다', '고스트 노트를 켜 둔 채 코드의 근음을 따라 4개 이상 찍는다', '킥 위치와 맞춰 보거나 일부러 엇갈리게 놓아 본다'],
-   why:'흐리게 보이는 고스트 노트는 같은 패턴에 있는 다른 채널의 노트다. 패턴이 여러 채널을 묶고 있기 때문에 가능한 기능이다. (역기획서 5.5절)',
+   why:'흐리게 보이는 고스트 노트는 같은 패턴에 있는 다른 채널의 노트다. 패턴이 여러 채널을 묶고 있기 때문에 가능한 기능이다. (시스템 분석 5.5절)',
    check:()=>countNotes('bass') >= 4},
   {title:'멜로디', tab:'roll', chan:'lead',
    goal:'Lead 채널로 멜로디를 만든다.',
    todo:['채널을 Lead로 고른다', '스케일로 표시된 줄 위주로 노트 6개 이상을 찍는다', '아래 세기 영역을 드래그해 강약을 준다'],
-   why:'스케일 강조는 음악 이론을 도구가 대신해 주는 장치다. 오선 악보 대신 그림으로 음악을 만들게 하려는 피아노 롤의 기획 의도다. (역기획서 5.5절)',
+   why:'스케일 강조는 음악 이론을 도구가 대신해 주는 장치다. 오선 악보 대신 그림으로 음악을 만들게 하려는 피아노 롤의 기획 의도다. (시스템 분석 5.5절)',
    check:()=>countNotes('lead') >= 6},
   {title:'편곡', tab:'playlist',
    goal:'루프를 8마디 이상의 곡 구조로 펼친다.',
    todo:['상단 "채널별 분할"로 패턴을 악기별로 나눈다', '플레이리스트 빈 칸을 눌러 클립을 배치한다. 패턴은 상단 선택 상자에서 바꾼다', '구간마다 악기를 빼고 넣어 인트로, 후렴 등을 만든다', '클립 하나를 고르고 "Make Unique"로 변주를 만든다', 'SONG 모드로 재생한다'],
-   why:'클립은 패턴을 복사하지 않고 가리킨다. 패턴을 고치면 그 패턴을 쓰는 모든 클립이 함께 바뀐다(상단 "N곳에서 사용 중" 표시). 한 곳만 바꾸려면 Make Unique로 복제한다. (역기획서 6.5절)',
+   why:'클립은 패턴을 복사하지 않고 가리킨다. 패턴을 고치면 그 패턴을 쓰는 모든 클립이 함께 바뀐다(상단 "N곳에서 사용 중" 표시). 한 곳만 바꾸려면 Make Unique로 복제한다. (시스템 분석 6.5절)',
    check:()=>state.clips.length >= 4 && new Set(state.clips.map(c=>c.patternId)).size >= 2 && songBars() >= 8},
   {title:'자동화', tab:'playlist',
    goal:'필터가 서서히 열리는 빌드업을 만든다.',
    todo:['"마스터 필터 자동화 사용"을 켠다', '아래 자동화 레인을 드래그해 필터가 닫혔다가 열리는 곡선을 그린다', 'SONG 모드로 재생해 들어 본다'],
-   why:'FL Studio에서는 파라미터를 오른쪽 클릭해 오토메이션 클립을 만든다. 오토메이션도 채널과 클립으로 존재해 패턴처럼 재사용된다. 이 도구는 마스터 필터 하나로 단순화했다. (역기획서 9장)',
+   why:'FL Studio에서는 파라미터를 오른쪽 클릭해 오토메이션 클립을 만든다. 오토메이션도 채널과 클립으로 존재해 패턴처럼 재사용된다. 이 도구는 마스터 필터 하나로 단순화했다. (시스템 분석 9장)',
    check:()=>state.automation.enabled && state.automation.values.some(v=>v < 0.95)},
   {title:'믹싱', tab:'mixer',
    goal:'소리의 균형을 잡고 라우팅을 경험한다.',
    todo:['믹서 트랙 볼륨을 조절해 균형을 잡는다', '808 Bass가 가는 트랙(Insert 5)의 사이드체인 소스를 Insert 1(Kick)로 지정해 펌핑을 들어 본다', '드럼 트랙들의 출력을 빈 트랙(예: Insert 8)으로 보내 버스를 만들어 본다'],
-   why:'FL Studio 믹서는 모든 트랙이 같은 종류다. 출력 대상만 바꾸면 버스가 된다. 사이드체인은 장르의 핵심 기법이라 가장 쉬운 조작에 배치되어 있다. (역기획서 8장)',
+   why:'FL Studio 믹서는 모든 트랙이 같은 종류다. 출력 대상만 바꾸면 버스가 된다. 사이드체인은 장르의 핵심 기법이라 가장 쉬운 조작에 배치되어 있다. (시스템 분석 8장)',
    check:()=>state.progress.mixed},
   {title:'내보내기', tab:'playlist',
    goal:'완성곡을 WAV 파일로 저장한다.',
    todo:['상단 "WAV 내보내기"를 누른다'],
-   why:'내보내기는 실시간 재생과 같은 처리 과정(채널 -> 믹서 -> 마스터)을 오프라인으로 빠르게 돌린 것이다. (역기획서 11.2절)',
+   why:'내보내기는 실시간 재생과 같은 처리 과정(채널 -> 믹서 -> 마스터)을 오프라인으로 빠르게 돌린 것이다. (시스템 분석 11.2절)',
    check:()=>state.progress.exported}
 ];
 function renderGuide(){
@@ -1240,6 +1277,7 @@ function init(){
     }
     if(ctrl && lk === 'z'){ e.preventDefault(); e.shiftKey ? redo() : undo(); return; }
     if(ctrl && lk === 'y'){ e.preventDefault(); redo(); return; }
+    if(e.key === 'Home'){ e.preventDefault(); seek(0, state.mode); return; }
     if(state.tab === 'roll' && prKey(e)) e.preventDefault();
   });
   initRollEvents(); initPlaylistEvents();
